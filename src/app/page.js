@@ -1,7 +1,8 @@
 'use client';
-
+import Image from "next/image";
 import ActivityWidget from "@/components/activity-widget";
 import MenuBar from "@/components/menu-bar";
+import trophyImage from "@/../public/trophy.png";
 
 const activities = [
     {
@@ -19,9 +20,20 @@ const activities = [
         date: "2022-01-01",
         duration: 15,
         category: "personal"
-    }
+    },
+    {
+      id: 2,
+      name: "Run",
+      status: "incompleted",
+      date: "2022-01-01",
+      duration: 10,
+      category: "health"
+  }
 ]
 
+function getNumCompleted(activities) {
+    return activities.filter(activity => activity.status === "completed").length;
+}
 
 export default function Home() {
   return (
@@ -46,12 +58,35 @@ export default function Home() {
         <main className="flex flex-col justify-center gap-8 items-center min-h-screen">
           This is the Home page
           
+          {/* Welcome box */}
+          <div>
+              <div className="bg-unicorn-purple-purple bg-opacity-20 backdrop-blur-md px-6 py-8 rounded-2xl shadow-lg w-[350px] flex items-center justify-between">
+                  <div className="mr-6">
+                      <h1 className="text-lg font-semibold text-secondary mb-4">Welcome back!</h1>
+                      <p className="text-gray-300">Completed {getNumCompleted(activities)}/{activities.length} task today</p>
+                      
+                      {/* Progress bar */}
+                      <div>
+                        <div className="mt-6">
+                          <div className=" rounded-full bg-gray-400">
+                            <div style={{ width: `${(getNumCompleted(activities)/activities.length) * 100}%` }} className="h-2 relative rounded-full bg-gradient-to-t from-pink-500 to-accent">
+                                <div className="rounded-full w-5 h-5 bg-primary border-4 border-secondary absolute right-0 translate-x-1/2 -translate-y-1/3">
+                            </div>
+                          </div>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                <Image src={trophyImage} width={70} height={70} alt="trophy image" className="mr-2" />
+
+              </div>
+          </div>
+          
+
+          {/* Activity widgets */}
           {activities.map(activity => (
               <ActivityWidget key={activity.id} {...activity }/>
-            ))
-          }
-          {/* <ActivityWidget id="1" name="Activity 1" status="completed" date="2022-01-01" duration="60" category="work"/>
-          <ActivityWidget id="2" name="Activity 2" status="incompleted" date="2022-01-01" duration="15" category="personal"/> */}
+          ))}
 
         </main>
 

@@ -32,7 +32,7 @@ export default function ActivityWidget({id, name, status, date, duration, catego
 
 
     return (
-        <Link href={`/view/${id}`} className={`${status==="completed"? 'bg-unicorn-pink-purple':'bg-secondary bg-opacity-80'}  p-4 rounded-2xl min-w-[350px] ${classes["widget-shadow"]}`}>
+        <Link href={`/view/${id}`} className={`${status==="completed"? 'bg-unicorn-pink-purple':'bg-secondary bg-opacity-80'} px-6 py-4 rounded-2xl w-[350px]  ${classes["widget-shadow"]}`}>
             <div className='flex flex-row justify-start gap-8'>
                 <div>
                     {IconComponent && <IconComponent size={50} className='text-[#5337C1]'/>}

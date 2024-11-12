@@ -21,7 +21,7 @@ module.exports = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         'unicorn': 'linear-gradient(to top right, #c5e5f1, #b794fe, #e1a6f6)',
         'unicorn-pink-purple': 'linear-gradient(to right, #F1B3EE, #435EED)',
-        'unicorn-purple-purple': 'linear-gradient(to bottom right, #613EEA, #5337C1)',
+        'unicorn-purple-purple': 'linear-gradient(to right, #8064ee, #9077f0, #8064ee)',
       },
 
     },
