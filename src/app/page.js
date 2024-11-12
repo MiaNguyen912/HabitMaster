@@ -1,6 +1,27 @@
 'use client';
 
+import ActivityWidget from "@/components/activity-widget";
 import MenuBar from "@/components/menu-bar";
+
+const activities = [
+    {
+        id: 1,
+        name: "Read 10 pages of book",
+        status: "completed",
+        date: "2022-01-01",
+        duration: 30,
+        category: "study"
+    },
+    {
+        id: 2,
+        name: "Meditate",
+        status: "incompleted",
+        date: "2022-01-01",
+        duration: 15,
+        category: "personal"
+    }
+]
+
 
 export default function Home() {
   return (
@@ -24,6 +45,14 @@ export default function Home() {
         {/* main content */}
         <main className="flex flex-col justify-center gap-8 items-center min-h-screen">
           This is the Home page
+          
+          {activities.map(activity => (
+              <ActivityWidget key={activity.id} {...activity }/>
+            ))
+          }
+          {/* <ActivityWidget id="1" name="Activity 1" status="completed" date="2022-01-01" duration="60" category="work"/>
+          <ActivityWidget id="2" name="Activity 2" status="incompleted" date="2022-01-01" duration="15" category="personal"/> */}
+
         </main>
 
         {/* menu bar */}
