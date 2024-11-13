@@ -37,7 +37,7 @@ export default function ActivityWidget({id, name, status, date, duration, catego
                     {IconComponent && <IconComponent size={50} className='text-[#5337C1]'/>}
                 </div>
                 <div className='flex flex-col justify-around items-start'>
-                    <p className={`${status==="completed"? 'text-secondary':'text-primary'} font-semibold text-lg`}>{name} ({duration}')</p>
+                    <p className={`${status==="completed"? 'text-secondary':'text-primary'} font-semibold text-lg`}>{name} ({duration}&apos;)</p>
                     {getStatusText(status)}
                 </div>
             </div>
