@@ -9,8 +9,8 @@ export default function MenuBar({activeButton}) {
 
   return (
     <header className="relative z-50 ">
-      <nav aria-label="Global" className="inset-x-0 bg-secondary fixed flex items-center justify-around py-2 px-4 bottom-0 rounded-t-3xl">
-        <div className="flex w-full h-fit justify-around">
+      <nav aria-label="Global" className="inset-x-0 bg-secondary fixed flex items-center justify-around px-4 bottom-0 rounded-t-3xl">
+        <div className="flex w-full md:h-fit h-fit justify-around">
           
           {/* Home */}
           <Link onClick={() => handleButtonClick('home')} href="/" className={`${activeButton==='home'? 'text-primary' : 'text-tertiary'} flex flex-col items-center justify-center  md:text-lg text-sm font-semibold hover:text-accent`}>
@@ -27,7 +27,7 @@ export default function MenuBar({activeButton}) {
 
           {/* Add Activity */}
           <Link onClick={() => handleButtonClick('add')} href="/add" className=" text-primary border-secondary border-8 rounded-full transform translate-y-[-40%] hover:text-accent">
-            <BsPlusCircleFill size={70} className='rounded-full drop-shadow-2xl shadow-2xl' />
+            <BsPlusCircleFill size={70} className='rounded-full drop-shadow-xl shadow-xl ' />
           </Link>
 
           {/* Report */}
