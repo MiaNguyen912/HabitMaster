@@ -6,52 +6,7 @@ import trophyImage from "@/../public/trophy.png";
 import DayWidget from "@/components/day-widget";
 import { useState } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-
-
-const activities = [
-    {
-        id: 1,
-        name: "Read book",
-        status: "completed",
-        date: "2024/11/12",
-        duration: 30,
-        category: "study"
-    },
-    {
-        id: 2,
-        name: "Read book",
-        status: "completed",
-        date: "2024/11/12",
-        duration: 30,
-        category: "study"
-    },
-    {
-      id: 3,
-      name: "Read book",
-      status: "completed",
-      date: "2024/11/12",
-      duration: 30,
-      category: "study"
-  },
-    {
-        id: 4,
-        name: "Meditate",
-        status: "incompleted",
-        date: "2024/11/12",
-        duration: 15,
-        category: "personal"
-    },
-    {
-      id: 5,
-      name: "Run",
-      status: "incompleted",
-      date: "2024/11/11",
-      duration: 10,
-      category: "health"
-  }
-]
-
-
+import {activities} from "@/data/activities";
 
 
 
@@ -101,6 +56,12 @@ export default function Home() {
       return recentDates;
   }
 
+  function isToday(date) {
+      if (date.toDateString() == new Date().toDateString()) {
+          return true;
+      }
+  }
+
   return (
     <div className="bg-light-blue relative isolate overflow-clip">
         {/* paralax background decor*/}
@@ -132,7 +93,7 @@ export default function Home() {
                 <div className="bg-unicorn-purple-purple bg-opacity-20 backdrop-blur-md px-6 py-8 rounded-xl shadow-lg w-full flex items-center justify-between">
                     <div className="mr-6">
                         <h1 className="text-lg font-semibold text-secondary mb-4">Welcome back!</h1>
-                        <p className="text-gray-300">Completed {getNumCompleted(getActivitiesByDate(selectedDate))}/{getActivitiesByDate(selectedDate).length} task today</p>
+                        <p className="text-gray-300">Completed {getNumCompleted(getActivitiesByDate(selectedDate))}/{getActivitiesByDate(selectedDate).length} task {isToday(selectedDate)? 'today' : 'for ' + selectedDate.getMonth() + '/' + selectedDate.getDate()}</p>
                         
                         {/* Progress bar */}
                         <div>
@@ -186,6 +147,9 @@ export default function Home() {
             {getActivitiesByDate(selectedDate).map(activity => (
                 <ActivityWidget key={activity.id} {...activity }/>
             ))}
+            {getActivitiesByDate(selectedDate).length == 0 && (
+              <p className="text-gray-400">You dont have any task for today</p>
+            )}
           </div>
           </div>
          

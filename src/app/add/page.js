@@ -13,7 +13,7 @@ export default function AddActivity() {
     date: '',
     hour: '',
     minute: '',
-    category: '',
+    category: 'study',
     remind: false,
   });
 
@@ -47,16 +47,16 @@ export default function AddActivity() {
     alert("You've created a new task");
 
     // clear the form
-    setFormData({
-      name: '',
-      date: '',
-      hour: '',
-      minute: '',
-      category: '',
-      remind: false,
-    });
+    // setFormData({
+    //   name: '',
+    //   date: '',
+    //   hour: '',
+    //   minute: '',
+    //   category: 'study',
+    //   remind: false,
+    // });
     
-    window.location.href = '/';
+    // window.location.href = '/';
   
   }
 
@@ -113,7 +113,7 @@ export default function AddActivity() {
                   <label htmlFor="duration" className="block text-sm text-gray-400">Duration</label>
                   <div className="w-full border-b-2 border-0 m-2 px-0 py-1">
                       <input
-                        className="w-[20px] text-right bg-white text-black outline-none"
+                        className="w-[35px] text-right bg-white text-black outline-none"
                         type="number" 
                         name="hour" 
                         id="hour"
@@ -123,9 +123,9 @@ export default function AddActivity() {
                         min="0" max="24"
                         
                       /> 
-                      <span className="text-black">:</span>
+                      <span className="text-black px-1">:</span>
                       <input
-                        className="w-[20px] text-left bg-white text-black outline-none"
+                        className="w-[35px] text-left bg-white text-black outline-none"
                         type="number" 
                         name="minute" 
                         id="minute"
