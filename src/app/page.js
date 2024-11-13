@@ -55,12 +55,11 @@ export default function Home() {
         </div>
 
         {/* main content */}
-        <main className="flex flex-col justify-center gap-8 items-center min-h-screen">
-          This is the Home page
-          
+
+        <div className="flex flex-col md:flex-row items-center justify-center p-4 md:gap-36 gap-8  min-h-screen">
           {/* Welcome box */}
-          <div>
-              <div className="bg-unicorn-purple-purple bg-opacity-20 backdrop-blur-md px-6 py-8 rounded-2xl shadow-lg w-[350px] flex items-center justify-between">
+          <div className="flex items-center">
+              <div className="bg-unicorn-purple-purple bg-opacity-20 backdrop-blur-md px-6 py-8 rounded-2xl shadow-lg w-[350px] md:-translate-y-20  flex items-center justify-between">
                   <div className="mr-6">
                       <h1 className="text-lg font-semibold text-secondary mb-4">Welcome back!</h1>
                       <p className="text-gray-300">Completed {getNumCompleted(activities)}/{activities.length} task today</p>
@@ -81,14 +80,15 @@ export default function Home() {
 
               </div>
           </div>
-          
 
           {/* Activity widgets */}
-          {activities.map(activity => (
-              <ActivityWidget key={activity.id} {...activity }/>
-          ))}
-
-        </main>
+          <div className="flex flex-col justify-center gap-8 items-center ">
+            {activities.map(activity => (
+                <ActivityWidget key={activity.id} {...activity }/>
+            ))}
+          </div>
+        </div>
+        
 
         {/* menu bar */}
         <MenuBar activeButton={"home"}/>

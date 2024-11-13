@@ -26,7 +26,7 @@ export default function MenuBar({activeButton}) {
 
 
           {/* Add Activity */}
-          <Link onClick={() => handleButtonClick('add')} href="/add" class=" text-primary border-secondary border-8 rounded-full transform translate-y-[-40%] hover:text-accent">
+          <Link onClick={() => handleButtonClick('add')} href="/add" className=" text-primary border-secondary border-8 rounded-full transform translate-y-[-40%] hover:text-accent">
             <BsPlusCircleFill size={70} className='rounded-full drop-shadow-2xl shadow-2xl' />
           </Link>
 
