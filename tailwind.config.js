@@ -12,6 +12,7 @@ module.exports = {
         foreground: "var(--foreground)",
 
         "primary": "#613EEA", // purple
+        "primary-dark": "#3912d4", // dark purple (for text)
         "secondary": "#f5f5f5", // off-white
         "tertiary": '#9DB2CE', // gray
         "accent": "#EF2A39", // hot-pink
@@ -21,7 +22,7 @@ module.exports = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         'unicorn': 'linear-gradient(to top right, #c5e5f1, #b794fe, #e1a6f6)',
         'unicorn-pink-purple': 'linear-gradient(to right, #F1B3EE, #435EED)',
-        'unicorn-purple-purple': 'linear-gradient(to right, #8064ee, #9077f0, #8064ee)',
+        'unicorn-purple-purple': 'linear-gradient(to right, #613EEA, #8064ee, #613EEA)',
       },
 
     },
