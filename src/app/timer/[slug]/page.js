@@ -1,10 +1,9 @@
-'use client';
 import React from 'react'
 
-const Create = () => {
+const page = () => {
   return (
     <div>page</div>
   )
 }
 
-export default Create
+export default page

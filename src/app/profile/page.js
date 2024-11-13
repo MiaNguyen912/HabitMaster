@@ -2,7 +2,7 @@
 
 import MenuBar from "@/components/menu-bar";
 
-export default function Report() {
+export default function Profile() {
   return (
     <div className="bg-light-blue relative isolate overflow-clip">
         {/* paralax background decor*/}
@@ -23,11 +23,11 @@ export default function Report() {
 
         {/* main content */}
         <main className="flex flex-col justify-center gap-8 items-center min-h-screen">
-          This is the Report page
+          This is the Profile page
         </main>
 
         {/* menu bar */}
-        <MenuBar activeButton={"report"}/>
+        <MenuBar activeButton={"profile"}/>
     </div>
   );
 }

@@ -1,15 +1,11 @@
 HabitMaster
 
-### commands used:
-npx create-next-app@latest habitmaster
-cd habitmaster
-npm install -D tailwindcss postcss autoprefixer
-npx tailwindcss init -p
-npm install firebase
-npm install chart.js
-npm i react-chartjs-2 
+### run the project:
+npm install 
 npm run dev
 
+### Note:
+- global colors (primary, secondary, etc) are configurated in tailwind.config.js
 
 ### todo
 1. Initialize Firebase Authentication and Firestore
