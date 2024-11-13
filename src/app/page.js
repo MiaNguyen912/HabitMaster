@@ -58,20 +58,21 @@ const activities = [
 export default function Home() {
   const [mainDate, setMainDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(mainDate);
+  const [rotateDirection, setRotateDirection] = useState(''); // New state to track rotation direction
 
 
   function handleGoBackDate() {
     const newDate = new Date();
     newDate.setDate(mainDate.getDate() - 5);
     setMainDate(newDate);
-    console.log(newDate);
+    setRotateDirection('rotate-forward'); 
   }
   
   function handleGoFowardDate() {
     const newDate = new Date();
     newDate.setDate(mainDate.getDate() + 5);
     setMainDate(newDate);
-    console.log(newDate);
+    setRotateDirection('rotate-backward');
   }
 
   function getActivitiesByDate(date) {
@@ -86,12 +87,12 @@ export default function Home() {
 
   function getFiveRecentDates(selectedDate){
       const recentDates = [];
-      for (let i = 2; i >=1; i--) {
+      for (let i = 7; i >=1; i--) {
           const recentdate = new Date();
           recentdate.setDate(selectedDate.getDate() - i);
           recentDates.push(recentdate);
       }
-      for (let i = 0; i <= 2; i++) {
+      for (let i = 0; i <= 7; i++) {
         const recentdate = new Date();
         recentdate.setDate(selectedDate.getDate() + i);
         recentDates.push(recentdate);
@@ -137,10 +138,18 @@ export default function Home() {
                         <div>
                           <div className="mt-6">
                             <div className=" rounded-full bg-gray-400">
-                              <div style={{ width: `${(getNumCompleted(getActivitiesByDate(selectedDate))/getActivitiesByDate(selectedDate).length) * 100}%` }} className="h-2 relative rounded-full bg-gradient-to-t from-pink-500 to-accent">
-                                  <div className="rounded-full w-5 h-5 bg-primary border-4 border-secondary absolute right-0 translate-x-1/2 -translate-y-1/3">
-                              </div>
-                            </div>
+                              {getActivitiesByDate(selectedDate).length > 0 && (
+                                <div style={{ width: `${(getNumCompleted(getActivitiesByDate(selectedDate))/getActivitiesByDate(selectedDate).length) * 100}%` }} className="h-2 relative rounded-full bg-gradient-to-t from-pink-500 to-accent">
+                                    <div className="rounded-full w-5 h-5 bg-primary border-4 border-secondary absolute right-0 translate-x-1/2 -translate-y-1/3"></div>
+                                </div>
+                              )}
+                              {getActivitiesByDate(selectedDate).length == 0 &&
+                                 <div style={{ width: 0 }} className="h-2 relative rounded-full bg-gradient-to-t from-pink-500 to-accent">
+                                    <div className="rounded-full w-5 h-5 bg-primary border-4 border-secondary absolute right-0 translate-x-1/2 -translate-y-1/3"></div>
+                                 </div>
+                              }
+                              
+                            
                             </div>
                           </div>
                         </div>
@@ -155,14 +164,19 @@ export default function Home() {
             {/* day widgets */}
             <div className="flex md:gap-3 gap-2 mb-6">
               <button onClick={handleGoBackDate}><IoIosArrowBack className="text-primary-dark"/></button>
-              {
-                getFiveRecentDates(mainDate).map(date => (
-                  <button onClick={()=>{setSelectedDate(date); setMainDate(date)}}>
-                      <DayWidget key={date.toDateString()} date={date} mainDate={mainDate} />
-                  </button>
-                  
-                ))
-              }
+              <div className="overflow-hidden  max-w-[300px] py-2">
+                  <div className={`flex justify-center md:gap-3 gap-2 transition duration-1000 ease ease-in-out ${rotateDirection}`} onAnimationEnd={()=>setRotateDirection("")}>
+                    {
+                      getFiveRecentDates(mainDate).map(date => (
+                        <button onClick={()=>{setSelectedDate(date)}}>
+                            <DayWidget key={date.toDateString()} date={date} mainDate={mainDate} selectedDate={selectedDate} />
+                        </button>
+                        
+                      ))
+                    }
+                  </div>
+              </div>
+              
               <button onClick={handleGoFowardDate}><IoIosArrowForward className="text-primary-dark"/></button>
             </div>
 
