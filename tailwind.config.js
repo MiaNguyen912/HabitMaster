@@ -12,7 +12,7 @@ module.exports = {
         foreground: "var(--foreground)",
 
         "primary": "#613EEA", // purple
-        "primary-dark": "#3912d4", // dark purple (for text)
+        "primary-dark": "#425195", // dark purple (for text)
         "secondary": "#f5f5f5", // off-white
         "tertiary": '#9DB2CE', // gray
         "accent": "#EF2A39", // hot-pink

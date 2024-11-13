@@ -168,8 +168,8 @@ export default function Home() {
                   <div className={`flex justify-center md:gap-3 gap-2 transition duration-1000 ease ease-in-out ${rotateDirection}`} onAnimationEnd={()=>setRotateDirection("")}>
                     {
                       getFiveRecentDates(mainDate).map(date => (
-                        <button onClick={()=>{setSelectedDate(date)}}>
-                            <DayWidget key={date.toDateString()} date={date} mainDate={mainDate} selectedDate={selectedDate} />
+                        <button onClick={()=>{setSelectedDate(date)}} key={date.toDateString()}>
+                            <DayWidget  date={date} mainDate={mainDate} selectedDate={selectedDate} />
                         </button>
                         
                       ))
