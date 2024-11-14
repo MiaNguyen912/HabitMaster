@@ -6,11 +6,19 @@ import { FaRegBell } from "react-icons/fa";
 import axios from "axios";
 import React from "react";
 
+const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 export default function AddActivity() {
   const [formData, setFormData] = useState({
     name: '',
     date: '',
+    recurringSun: false,
+    recurringMon: false,
+    recurringTue: false,
+    recurringWed: false,
+    recurringThu: false,
+    recurringFri: false,
+    recurringSat: false,
     hour: '',
     minute: '',
     category: 'study',
@@ -35,11 +43,27 @@ export default function AddActivity() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log(formData);
 
-    // make POST request to /api/create
+    // process data
+    if (formData.hour === '') {
+      formData.hour = 0;
+    }
+    if (formData.minute === '') {
+      formData.minute = 0;
+    }
+    const adjustedFormData = {
+      name: formData.name,
+      date: (new Date((formData.date).replace(/-/g, '/'))).toDateString(),
+      recurring: daysOfWeek.filter(day => formData[`recurring${day}`]),
+      duration: parseInt(formData.hour) * 60 + parseInt(formData.minute),
+      category: formData.category,
+      remind: formData.remind,
+    };
+    console.log(adjustedFormData);
+
+    // make POST request to /api/activity
     try {
-      const response = await axios.post('/../api/create', formData);
+      const response = await axios.post('/../api/activity', adjustedFormData);
       console.log('Success:', response.data);
     } catch (error) {
         console.error('Error:', error.message);
@@ -50,6 +74,13 @@ export default function AddActivity() {
     // setFormData({
     //   name: '',
     //   date: '',
+    //   recurringSun: false,
+    //   recurringMon: false,
+    //   recurringTue: false,
+    //   recurringWed: false,
+    //   recurringThu: false,
+    //   recurringFri: false,
+    //   recurringSat: false,
     //   hour: '',
     //   minute: '',
     //   category: 'study',
@@ -82,11 +113,14 @@ export default function AddActivity() {
         {/* main content */}
         <div>
           <GoBackHeader/>
-          <div className="flex flex-col items-center justify-center h-screen">
-            <h1 className="font-bold text-3xl mb-8">Create New Task</h1>
+          
+
+          <div className="flex flex-col items-center md:justify-center justify-between h-screen p-4 max-sm:p-0">
+            <h1 className="font-bold text-3xl pt-[10vh] md:mb-4">Create New Task</h1>
 
             {/* create activity form */}
-            <form onSubmit={handleSubmit} className="p-6 mt-8 bg-white rounded-2xl w-[50vw] flex flex-col gap-4">
+            <form onSubmit={handleSubmit} className="p-6 lg:mt-8 bg-white md:rounded-2xl rounded-t-2xl md:w-[70vw] w-full min-h-[70vh] min-w-[300px] flex flex-col justify-around gap-4 shadow-2xl">
+              {/* name */}
               <div className="space-y-2">
                   <label htmlFor="name" className="block text-sm text-gray-400">Activity Name</label>
                   <input type='text' placeholder='Task Name' required autoFocus
@@ -98,8 +132,9 @@ export default function AddActivity() {
                   />
               </div>
              
+              {/* date */}
               <div className="space-y-2">
-                  <label htmlFor="date" className="block text-sm text-gray-400">Date</label>
+                  <label htmlFor="date" className="block text-sm text-gray-400">Start Date</label>
                   <input type='date' required
                       className="w-full border-b-2 border-0 bg-white text-black m-2 px-0 py-1 outline-none" 
                       name='date'
@@ -109,6 +144,26 @@ export default function AddActivity() {
                   />
               </div>
 
+              {/* recurring */}
+              <div className="space-y-2">
+                <label htmlFor="recurring" className="block text-sm text-gray-400">Recurring</label>
+                <div className="flex justify-around items-center flex-wrap">
+                  {daysOfWeek.map((day, index) => (
+                    <label key={index} className="mr-2 flex flex-col items-center">
+                      <input type='checkbox'
+                          className="w-4 h-4 accent-primary-dark" 
+                          name={`recurring${day}`}
+                          id={`recurring${day}`}
+                          checked={formData[`recurring` + day]}
+                          onChange={handleInputChange}
+                      />
+                      <span className="text-sm text-gray-400">{day}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* duration */}
               <div className="space-y-2">
                   <label htmlFor="duration" className="block text-sm text-gray-400">Duration</label>
                   <div className="w-full border-b-2 border-0 m-2 px-0 py-1">
@@ -137,6 +192,7 @@ export default function AddActivity() {
                   </div>
               </div>
 
+              {/* category */}
               <div className="space-y-2">
                   <label htmlFor="category" className="block text-sm text-gray-400">Category</label>
                   <select 
@@ -158,7 +214,7 @@ export default function AddActivity() {
               <div className="flex items-center justify-between">
                   <label htmlFor="remind" className="block text-md text-primary-dark font-semibold"><FaRegBell className="inline-block"/> Remind Me</label>
                   <input type='checkbox'
-                      className="w-4 h-4" 
+                      className="w-4 h-4 accent-primary-dark" 
                       name='remind'
                       id='remind'
                       checked={formData.remind}
