@@ -4,16 +4,40 @@ import ActivityWidget from "@/components/activity-widget";
 import MenuBar from "@/components/menu-bar";
 import trophyImage from "@/../public/trophy.png";
 import DayWidget from "@/components/day-widget";
-import { useState } from "react";
+import { act, useState } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import {activities} from "@/data/activities";
+import axios from "axios";
+import { useEffect } from "react";
+// import {activities} from "@/data/activities";
 
+
+// make GET request to /api/activity?date="..."
+async function handleGetRequestByDate(date) {  
+  try {
+    const response = await axios.get('/../api/activity', {params: {date: date}}); // date is a string, format: "2024/11/15"
+    return response.data;
+  } catch (error) {
+      console.error('Error:', error.message);
+  }
+}
 
 
 export default function Home() {
   const [mainDate, setMainDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(mainDate);
   const [rotateDirection, setRotateDirection] = useState(''); // New state to track rotation direction
+  const [activities, setActivities] = useState([]);
+  
+
+  useEffect(() => {
+    async function fetchData() {
+      const getResult = await handleGetRequestByDate(selectedDate.toDateString());
+      setActivities(getResult["data"]); 
+      console.log(getResult["data"]);     
+    }
+    fetchData();
+  } , [selectedDate]);
+
 
 
   function handleGoBackDate() {
@@ -30,15 +54,15 @@ export default function Home() {
     setRotateDirection('rotate-backward');
   }
 
-  function getActivitiesByDate(date) {
-    return activities.filter(activity => {
-      return new Date(activity.date).getDate() == date.getDate();
-    });
-  }
+  // function getActivitiesByDate(date) {
+  //   return activities.filter(activity => {
+  //     return new Date(activity.date).getDate() == date.getDate();
+  //   });
+  // }
 
   function getNumCompleted(activities) {
     return activities.filter(activity => activity.status === "completed").length;
-}
+  }
 
   function getFiveRecentDates(selectedDate){
       const recentDates = [];
@@ -93,18 +117,18 @@ export default function Home() {
                 <div className="bg-unicorn-purple-purple bg-opacity-20 backdrop-blur-md px-6 py-8 rounded-xl shadow-lg w-full flex items-center justify-between">
                     <div className="mr-6">
                         <h1 className="text-lg font-semibold text-secondary mb-4">Welcome back!</h1>
-                        <p className="text-gray-300">Completed {getNumCompleted(getActivitiesByDate(selectedDate))}/{getActivitiesByDate(selectedDate).length} task {isToday(selectedDate)? 'today' : 'for ' + selectedDate.getMonth() + '/' + selectedDate.getDate()}</p>
+                        <p className="text-gray-300">Completed {getNumCompleted(activities)}/{activities.length} task {isToday(selectedDate)? 'today' : 'for ' + selectedDate.getMonth() + '/' + selectedDate.getDate()}</p>
                         
                         {/* Progress bar */}
                         <div>
                           <div className="mt-6">
                             <div className=" rounded-full bg-gray-400">
-                              {getActivitiesByDate(selectedDate).length > 0 && (
-                                <div style={{ width: `${(getNumCompleted(getActivitiesByDate(selectedDate))/getActivitiesByDate(selectedDate).length) * 100}%` }} className="h-2 relative rounded-full bg-gradient-to-t from-pink-500 to-accent">
+                              {activities.length > 0 && (
+                                <div style={{ width: `${(getNumCompleted(activities)/activities.length) * 100}%` }} className="h-2 relative rounded-full bg-gradient-to-t from-pink-500 to-accent">
                                     <div className="rounded-full w-5 h-5 bg-primary border-4 border-secondary absolute right-0 translate-x-1/2 -translate-y-1/3"></div>
                                 </div>
                               )}
-                              {getActivitiesByDate(selectedDate).length == 0 &&
+                              {activities.length == 0 &&
                                  <div style={{ width: 0 }} className="h-2 relative rounded-full bg-gradient-to-t from-pink-500 to-accent">
                                     <div className="rounded-full w-5 h-5 bg-primary border-4 border-secondary absolute right-0 translate-x-1/2 -translate-y-1/3"></div>
                                  </div>
@@ -144,10 +168,10 @@ export default function Home() {
             
             {/* Activity widgets */}
             <div className="flex flex-col justify-center lg:gap-4 gap-3 items-center ">
-            {getActivitiesByDate(selectedDate).map(activity => (
-                <ActivityWidget key={activity.id} {...activity }/>
+            {activities.map(activity => (
+                <ActivityWidget key={activity.id} {...activity } selectedDate={selectedDate}/>
             ))}
-            {getActivitiesByDate(selectedDate).length == 0 && (
+            {activities.length == 0 && (
               <p className="text-gray-400">You dont have any task for today</p>
             )}
           </div>
