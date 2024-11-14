@@ -33,11 +33,9 @@ npm run dev
         }
         ```
 
-
-
 ### FireStore setup:
-1. collection name: "activities"
-2. remember to set up a query index in firebase collection (with the variables below) to make the GET request by date works
+1. create a collection with name "activities"
+2. set up a query index for "activities" collection with the details below (to make the combined query in the get-activities-by-date api works)
     collectionID: activities,
     recurring: array,
     date: ascending,
