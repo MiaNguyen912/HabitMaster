@@ -2,7 +2,6 @@
 import Image from "next/image";
 import MenuBar from "@/components/menu-bar";
 import trophyImage from "@/../public/trophy.png";
-import stemImage from "@/../public/stem.png";
 import { act, useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
