@@ -93,7 +93,7 @@ export default function AddActivity() {
 
 
   return (
-    <div className="bg-light-blue relative isolate overflow-clip min-h-screen">
+    <div className="bg-light-blue relative isolate overflow-clip h-screen overflow-y-auto">
         {/* paralax background decor*/}
         <div className="fixed -z-10">
             <div aria-hidden="true" className="absolute top-[-30rem] left-[25vw] blur-3xl transform-gpu">
@@ -115,11 +115,11 @@ export default function AddActivity() {
           <GoBackHeader text="Home"/>
           
 
-          <div className="flex flex-col items-center md:justify-center justify-between h-screen p-4 max-sm:p-0">
+          <div className="flex flex-col items-center md:justify-center justify-between h-screen p-4 max-sm:p-0 overflow-y-auto">
             <h1 className="font-bold text-3xl pt-[10vh] md:mb-4">Create New Task</h1>
 
             {/* create activity form */}
-            <form onSubmit={handleSubmit} className="p-6 lg:mt-8 bg-white md:rounded-2xl rounded-t-2xl md:w-[70vw] w-full min-h-[70vh] min-w-[300px] flex flex-col justify-around gap-4 shadow-2xl">
+            <form onSubmit={handleSubmit} className="p-6 lg:mt-8 bg-white md:rounded-2xl rounded-t-2xl md:w-[70vw] w-full  min-w-[300px] flex flex-col justify-around gap-4 shadow-2xl">
               {/* name */}
               <div className="space-y-2">
                   <label htmlFor="name" className="block text-sm text-gray-400">Activity Name</label>
