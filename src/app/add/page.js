@@ -112,8 +112,8 @@ export default function AddActivity() {
 
         {/* main content */}
         <div>
-          <GoBackHeader/>
-          a
+          <GoBackHeader text="Home"/>
+          
 
           <div className="flex flex-col items-center md:justify-center justify-between h-screen p-4 max-sm:p-0 overflow-y-auto">
             <h1 className="font-bold text-3xl pt-[10vh] md:mb-4">Create New Task</h1>

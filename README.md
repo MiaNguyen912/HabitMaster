@@ -10,6 +10,7 @@ npm run dev
     - to create new task: send POST request to http://localhost:3000/api/activity
     - to see all tasks: send GET to http://localhost:3000/api/activity
     - to see tasks on specific date: send GET to like http://localhost:3000/api/activity?date="2024/11/14" (this display recurring activities on every Thurday from 11/14/2024)
+    - to see a task with a specific id: send GET to http://localhost:3000/api/activity?id=0cVrjm6RqIvKZdAxoBO2
     - data format example: 
         ```
         {
