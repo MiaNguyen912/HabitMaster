@@ -1,5 +1,5 @@
 import {db} from "@/data/firebaseConfig";
-import {collection, doc, setDoc, getDoc, getDocs, query, where, and} from "firebase/firestore";
+import {collection, doc, setDoc, getDoc, getDocs, query, where, deleteDoc} from "firebase/firestore";
 
 
 // ------------------------- create a new activity ------------------------
@@ -142,10 +142,11 @@ export async function PUT(req, res) {
 export async function DELETE(req, res) {
     const body = await req.json();
     const { id } = body;
+    console.log(id);
 
     const docRef = doc(db, "activities", id);
     try {
-        await setDoc(docRef, {status: "deleted"}, { merge: true });
+        await deleteDoc(docRef);
         return Response.json({ status:200, message: "success" });
     } catch (error) {
         console.log(error);

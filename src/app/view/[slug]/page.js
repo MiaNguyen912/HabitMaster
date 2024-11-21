@@ -89,17 +89,28 @@ export default function View() {
         console.error('Error:', error.message);
     }
     alert("Your activity has been updated!");
-    // window.location.href = '/';
+    window.location.href = '/';
   
   }
 
   function handleCancel(e) {
     e.preventDefault();
     setFormData(originalData);
-    // window.location.href = '/';
+    window.location.href = '/';
   }
 
-  function handleDelete(e) {
+  async function handleDelete(e) {
+    e.preventDefault();
+
+    // make DELETE request to /api/activity to detele activity
+    try {
+      const response = await axios.delete('/../api/activity', {data: {id:slug_id}});
+      console.log('Success:', response.data);
+    } catch (error) {
+        console.error('Error:', error.message);
+    }
+    alert("Your activity has been deleted!");
+    window.location.href = '/';
   }
 
  
