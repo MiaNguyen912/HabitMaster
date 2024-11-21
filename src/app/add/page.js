@@ -112,7 +112,7 @@ export default function AddActivity() {
 
         {/* main content */}
         <div>
-          <GoBackHeader/>
+          <GoBackHeader text="Home"/>
           
 
           <div className="flex flex-col items-center md:justify-center justify-between h-screen p-4 max-sm:p-0">

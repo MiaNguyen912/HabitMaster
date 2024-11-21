@@ -21,7 +21,6 @@ async function handleGetRequestByDate(date) {
   }
 }
 
-
 export default function Home() {
   const [mainDate, setMainDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(mainDate);
