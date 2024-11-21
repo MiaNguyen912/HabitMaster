@@ -26,7 +26,8 @@ export default function Home() {
   const [selectedDate, setSelectedDate] = useState(mainDate);
   const [rotateDirection, setRotateDirection] = useState(''); // New state to track rotation direction
   const [activities, setActivities] = useState([]);
-  
+  const [refreshKey, setRefreshKey] = useState(0); 
+
 
   useEffect(() => {
     async function fetchData() {
@@ -35,7 +36,7 @@ export default function Home() {
       console.log(getResult["data"]);     
     }
     fetchData();
-  } , [selectedDate]);
+  } , [selectedDate, refreshKey]);
 
 
 
@@ -53,11 +54,19 @@ export default function Home() {
     setRotateDirection('rotate-backward');
   }
 
-  // function getActivitiesByDate(date) {
-  //   return activities.filter(activity => {
-  //     return new Date(activity.date).getDate() == date.getDate();
-  //   });
-  // }
+  async function handleDelete(e, activityName, id) {
+      e.preventDefault();
+
+      // make DELETE request to /api/activity to detele activity
+      try {
+      const response = await axios.delete('/../api/activity', {data: {id:id}});
+      console.log('Success:', response.data);
+      } catch (error) {
+          console.error('Error:', error.message);
+      }
+      alert(`${activityName} has been deleted!`);
+      setRefreshKey((prevKey) => prevKey+1); // refresh the page
+  }
 
   function getNumCompleted(activities) {
     return activities.filter(activity => activity.status === "completed").length;
@@ -168,7 +177,7 @@ export default function Home() {
             {/* Activity widgets */}
             <div className="flex flex-col justify-center lg:gap-4 gap-3 items-center ">
             {activities.map(activity => (
-                <ActivityWidget key={activity.id} {...activity } selectedDate={selectedDate}/>
+                <ActivityWidget key={activity.id} {...activity } selectedDate={selectedDate} deleteFunction={handleDelete}/>
             ))}
             {activities.length == 0 && (
               <p className="text-gray-400">You dont have any task for today</p>

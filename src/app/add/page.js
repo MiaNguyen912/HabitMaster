@@ -87,8 +87,7 @@ export default function AddActivity() {
     //   remind: false,
     // });
     
-    // window.location.href = '/';
-  
+    window.location.href = '/';
   }
 
 
