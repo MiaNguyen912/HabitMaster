@@ -46,4 +46,4 @@ npm run dev
 ### resources
 - clip path generator: https://www.cssportal.com/css-clip-path-generator/
 - firestore doc: https://firebase.google.com/docs/firestore/query-data/get-data, https://firebase.google.com/docs/firestore/query-data/queries
-
+- countdown clock React library: https://www.npmjs.com/package/react-countdown-circle-timer
