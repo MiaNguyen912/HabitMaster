@@ -55,7 +55,6 @@ async function getActivitiesByDate(targetDate, res) {
         const q = query(
             collectionRef, 
             where("date", ">=", targetDate.toDateString()),
-            where("recurring", "array-contains", daysOfWeek[targetDateOfWeek])
         );
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
@@ -99,7 +98,7 @@ async function getActivityByID(id) {
 }
 
 
-export async function GET(req, res) { 
+export async function GET(req, res) {
     const url = new URL(req.url);
     const searchParams = new URLSearchParams(url.searchParams);
     const targetDate = searchParams.get("date");    // url: /api/activity?date=%222024/11/15%22

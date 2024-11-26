@@ -8,7 +8,7 @@ import { usePathname } from 'next/navigation';
 import GoBackHeader from "@/components/goback-header";
 import React from "react";
 import { CountdownCircleTimer, useCountdown } from 'react-countdown-circle-timer'
-
+import { CiPause1, CiPlay1 } from "react-icons/ci";
 
 
 // make GET request to /api/activity?id="..."
@@ -29,6 +29,7 @@ export default function Timer() {
   const [name, setName] = useState('');
   const [duration, setDuration] = useState(0);
   const [originalDuration, setOriginalDuration] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   async function handleUpdate(e) { 
     e.preventDefault();
@@ -97,7 +98,7 @@ export default function Timer() {
             </svg>
               
             <CountdownCircleTimer
-              isPlaying
+              isPlaying={isPlaying}
               duration={duration*60}
               colors="url(#linear-gradient)"
               colorsTime={[7, 5, 2, 0]}
@@ -122,7 +123,21 @@ export default function Timer() {
                 }}
             </CountdownCircleTimer>
 
-            
+            {/*Button to Control Timer*/}
+              <div className="timer-controls">
+                  <button
+                      className="timer-icon-button"
+                      onClick={() => setIsPlaying((prev) => !prev)}
+                  >
+                      {isPlaying ? (
+                          <CiPause1 className="timer-icon"/>
+                      ) : (
+                          <CiPlay1 className="timer-icon"/>
+                      )}
+                  </button>
+              </div>
+
+
           </div>
         </div>
     </div>
