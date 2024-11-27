@@ -2,6 +2,7 @@
 import '../styles/login.css';
 import axios from "axios";
 import {useEffect, useState} from "react";
+import Link from 'next/link';
 
 export default function Login() {
     const [quote, setQuote] = useState("");
@@ -42,12 +43,12 @@ export default function Login() {
             {/* main content */}
             <main className="flex flex-col justify-center items-center min-h-screen">
                 <h2 className="mb-1 text-3xl font-light text-center text-gray-900">
-                    Welcome To...
+                    Welcome Back To...
                 </h2>
                 <h1 className="mb-7 text-5xl font-bold text-center text-gray-900">
                     HabitMaster
                 </h1>
-                <p className="text-center text-gray-700 italic mb-7">{`"${quote}"`}</p>
+                <p className="m-3 quote text-center text-gray-700 italic mb-7">{`"${quote}"`}</p>
                 <div className="flex flex-col" data-id="login-card">
                     <input
                         type="text"
@@ -60,6 +61,7 @@ export default function Login() {
                         placeholder="Enter password"
                     />
                     <button className="border border-gray-300 rounded-md px-4 py-2 bg-red-600 text-white font-bold">Login</button>
+                    <Link onClick={() => handleButtonClick('register')} href="/register" className="mt-2 italic text-gray-500 hover:text-gray-900">Don’t have an account? Sign Up</Link>
                 </div>
             </main>
         </div>
