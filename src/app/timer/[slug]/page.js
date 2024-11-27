@@ -136,8 +136,6 @@ export default function Timer() {
                       )}
                   </button>
               </div>
-
-
           </div>
         </div>
     </div>
