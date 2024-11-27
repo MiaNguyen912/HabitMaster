@@ -55,6 +55,7 @@ async function getActivitiesByDate(targetDate, res) {
         const q = query(
             collectionRef, 
             where("date", ">=", targetDate.toDateString()),
+            where("recurring", "array-contains", daysOfWeek[targetDateOfWeek])
         );
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
@@ -116,7 +117,7 @@ export async function GET(req, res) {
 // ------------------------- update an activity-------------------------
 export async function PUT(req, res) {
     const body = await req.json();
-    const { id, name, recurring, date, duration, category, remind } = body;
+    const { id, name, recurring, date, duration, category, remind, status } = body;
 
     const updatedActivity = {
         name,
@@ -124,8 +125,10 @@ export async function PUT(req, res) {
         recurring,
         duration,
         category,
-        remind
+        remind,
+        status
     };
+    console.log(updatedActivity);
     const docRef = doc(db, "activities", id);
     try {
         await setDoc(docRef, updatedActivity, { merge: true });

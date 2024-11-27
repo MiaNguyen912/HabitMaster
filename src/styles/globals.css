@@ -45,3 +45,17 @@ body {
 }
 
 
+/* growing animation */
+@keyframes grow {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.animate-grow {
+  animation: grow 1s ease-in-out forwards;
+}

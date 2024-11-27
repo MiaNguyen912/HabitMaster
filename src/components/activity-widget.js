@@ -46,9 +46,10 @@ export default function ActivityWidget({id, name, status, date, duration, catego
         if (status === "completed") {
             return <p className='font-semibold text-primary'><FaCircleCheck className='inline-block'/> Completed</p>;
         } else {
-            const activityDate = new Date(date);
+            // const activityDate = new Date(date);
+            const today = new Date();
             const targetDate = new Date(selectedDate); 
-            if (compareDates(activityDate, targetDate) >= 0) {
+            if (compareDates(targetDate, today) >= 0) {
                 return <Link href={`/timer/${id}`} className='font-semibold text-primary hover:text-accent'>Start <FaArrowRightLong className='inline-block'/></Link>;
             } else {
                 return <p className='font-semibold text-accent'>Task Overdue</p>;
