@@ -6,6 +6,9 @@ import Link from 'next/link';
 
 export default function Login() {
     const [quote, setQuote] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         // Function to fetch a quote from ZenQuotes API
@@ -50,18 +53,24 @@ export default function Login() {
                 </h1>
                 <p className="m-3 quote text-center text-gray-700 italic mb-7">{`"${quote}"`}</p>
                 <div className="flex flex-col" data-id="login-card">
+                    <p className="text-gray-950">Email</p>
                     <input
                         type="text"
                         className="mb-1 border border-gray-300 rounded-md px-4 py-2 bg-blue-950 text-white"
-                        placeholder="Enter username"
+                        placeholder="Enter email"
                     />
+                    <p className="text-gray-950">Password</p>
                     <input
                         type="text"
                         className="border border-gray-300 rounded-md px-4 py-2 bg-blue-950 text-white mb-3"
                         placeholder="Enter password"
                     />
-                    <button className="border border-gray-300 rounded-md px-4 py-2 bg-red-600 text-white font-bold">Login</button>
-                    <Link onClick={() => handleButtonClick('register')} href="/register" className="mt-2 italic text-gray-500 hover:text-gray-900">Don’t have an account? Sign Up</Link>
+                    <button
+                        className="border border-gray-300 rounded-md px-4 py-2 bg-red-600 text-white font-bold">Login
+                    </button>
+                    <Link onClick={() => handleButtonClick('register')} href="/register"
+                          className="mt-2 italic text-gray-500 hover:text-gray-900">Don’t have an account? Sign
+                        Up</Link>
                 </div>
             </main>
         </div>

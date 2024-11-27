@@ -2,9 +2,34 @@
 import axios from "axios";
 import {useEffect, useState} from "react";
 import Link from 'next/link';
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 export default function Register() {
   const [quote, setQuote] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: ""
+  });
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value, // Dynamically update the field based on the input's "name"
+    }));
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const user = await createUserWithEmailAndPassword(formData.email, formData.password);
+    }
+    console.log("Submitted Data:", formData);
+  };
 
   useEffect(() => {
     // Function to fetch a quote from ZenQuotes API
@@ -48,29 +73,48 @@ export default function Register() {
             HabitMaster
           </h1>
           <p className="m-3 quote text-center text-gray-700 italic mb-7">{`"${quote}"`}</p>
-          <div className="flex flex-col" data-id="login-card">
-            <input
-                type="text"
-                className="mb-1 border border-gray-300 rounded-md px-4 py-2 bg-blue-950 text-white"
-                placeholder="Enter first name"
-            />
-            <input
-                type="text"
-                className="mb-1 border border-gray-300 rounded-md px-4 py-2 bg-blue-950 text-white"
-                placeholder="Enter last Name"
-            />
-            <input
-                type="text"
-                className="mb-1 border border-gray-300 rounded-md px-4 py-2 bg-blue-950 text-white"
-                placeholder="Enter username"
-            />
-            <input
-                type="text"
-                className="border border-gray-300 rounded-md px-4 py-2 bg-blue-950 text-white mb-3"
-                placeholder="Enter password"
-            />
-            <button className="border border-gray-300 rounded-md px-4 py-2 bg-red-600 text-white font-bold">Sign Up
-            </button>
+          <div data-id="login-card">
+            <form onSubmit={handleRegister} className="flex flex-col">
+              <p className="text-gray-950">First Name</p>
+              <input
+                  type="text"
+                  name="firstName"
+                  className="mb-1 border border-gray-300 rounded-md px-4 py-2 bg-blue-950 text-white"
+                  placeholder="Enter first name"
+                  value={formData.firstName}
+                  onChange={handleChange}
+              />
+              <p className="text-gray-950">Last Name</p>
+              <input
+                  type="text"
+                  name="lastName"
+                  className="mb-1 border border-gray-300 rounded-md px-4 py-2 bg-blue-950 text-white"
+                  placeholder="Enter last Name"
+                  value={formData.lastName}
+                  onChange={handleChange}
+              />
+              <p className="text-gray-950">Email</p>
+              <input
+                  name="email"
+                  type="email"
+                  className="mb-1 border border-gray-300 rounded-md px-4 py-2 bg-blue-950 text-white"
+                  placeholder="Enter email"
+                  value={formData.email}
+                  onChange={handleChange}
+              />
+              <p className="text-gray-950">Password</p>
+              <input
+                  name="password"
+                  type="password"
+                  className="mb-3 border border-gray-300 rounded-md px-4 py-2 bg-blue-950 text-white"
+                  placeholder="Enter password"
+                  value={formData.password}
+                  onChange={handleChange}
+              />
+              <button type="submit"
+                      className="border border-gray-300 rounded-md px-4 py-2 bg-red-600 text-white font-bold">Sign Up
+              </button>
+            </form>
             <Link onClick={() => handleButtonClick('login')} href="/"
                   className="mt-2 italic text-gray-500 hover:text-gray-900">Already have an account? Log in</Link>
           </div>
