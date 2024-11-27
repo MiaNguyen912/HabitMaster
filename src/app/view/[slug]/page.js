@@ -43,6 +43,7 @@ export default function View() {
     category: 'study',
     remind: false,
   });
+  const [status, setStatus] = useState();
   const [originalData, setOriginalData] = useState(formData);
 
   function handleInputChange(e) {
@@ -79,6 +80,7 @@ export default function View() {
       duration: parseInt(formData.hour) * 60 + parseInt(formData.minute),
       category: formData.category,
       remind: formData.remind,
+      status: status,
     };
 
     // make PUT request to /api/activity to update data
@@ -137,6 +139,7 @@ export default function View() {
         category: getResult["data"].category,
         remind: getResult["data"].remind,
       };
+      setStatus(getResult["data"].status);
       setFormData(updatedFormData);
       setOriginalData(updatedFormData);
     }
