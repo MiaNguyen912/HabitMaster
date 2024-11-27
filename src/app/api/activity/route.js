@@ -62,6 +62,20 @@ async function getActivitiesByDate(targetDate, res) {
             data.push({ id: doc.id, ...doc.data()});
         });
 
+        // get the daily_completed activities for the target date and update the status of the activity (since status is set to "incompleted" by default)
+        const targetDateCompleted_docRef = doc(db, "daily_completed", targetDate.toDateString());
+        const targetDateCompleted_doc_snapshot = await getDoc(targetDateCompleted_docRef);
+        let completedActivities = [];
+        if (targetDateCompleted_doc_snapshot.exists()) {
+            completedActivities = targetDateCompleted_doc_snapshot.data().activity_id;
+        }
+        data.forEach((activity) => {
+            if (completedActivities.includes(activity.id)) {
+                activity.status = "completed"; // update the status 
+            }
+        });
+
+
         return Response.json({ status:200, message: "success", data: data });
     } catch (error) {
         console.log(error);
@@ -126,17 +140,38 @@ export async function PUT(req, res) {
         duration,
         category,
         remind,
-        status
     };
     console.log(updatedActivity);
-    const docRef = doc(db, "activities", id);
+    const activities_docRef = doc(db, "activities", id);
     try {
-        await setDoc(docRef, updatedActivity, { merge: true });
+        await setDoc(activities_docRef, updatedActivity, { merge: true });
+
+        // add id to the daily_completed doc if status change to "completed"
+        if (status === "completed") {
+            const today = new Date();
+            const todayCompleted_docRef = doc(db, "daily_completed", today.toDateString());
+            const todayCompleted_doc_snapshot = await getDoc(todayCompleted_docRef);
+
+            // if the date is not in the daily_completed collection, create a new doc
+            if (!todayCompleted_doc_snapshot.exists()) {
+                await setDoc(todayCompleted_docRef, { activity_id: [id] });
+            } else {
+                // else, update the existing doc
+                if (!todayCompleted_doc_snapshot.data().activity_id.includes(id)) {
+                    const updatedActivityList = [...todayCompleted_doc_snapshot.data().activity_id, id];
+                    await setDoc(todayCompleted_docRef, { activity_id: updatedActivityList });
+                }
+            }
+
+
+        }   
         return Response.json({ status:200, message: "success" });
     } catch (error) {
         console.log(error);
         return Response.json({ status:500, error: error.message });
     }
+
+   
 }
 
 
