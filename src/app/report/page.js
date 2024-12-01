@@ -1,7 +1,7 @@
 'use client';
 
 import MenuBar from "@/components/menu-bar";
-import Chart from "@/components/chart";
+import ReportChart from "@/components/chart";
 import GoBackHeader from "@/components/goback-header";
 
 export default function Report() {
@@ -32,7 +32,7 @@ export default function Report() {
         <div>
             <div className="flex flex-col items-center justify-center gap-4 h-screen p-4 max-sm:p-0">
          
-              <Chart/>
+              <ReportChart/>
 
 
         

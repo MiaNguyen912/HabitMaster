@@ -33,7 +33,7 @@ export default function Home() {
     async function fetchData() {
       const getResult = await handleGetRequestByDate(selectedDate.toDateString());
       setActivities(getResult["data"]); 
-      console.log(getResult["data"]);     
+      // console.log(getResult["data"]);     
     }
     fetchData();
   } , [selectedDate, refreshKey]);
