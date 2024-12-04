@@ -13,7 +13,6 @@ export default function Register() {
     firstName: "",
     lastName: ""
   });
-  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,41 +24,31 @@ export default function Register() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    createUserWithEmailAndPassword(auth, formData.email, formData.password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          console.log(user);
-
-          const uid = user.uid;
-          localStorage.setItem('firstName', formData.firstName);
-          localStorage.setItem('lastName', formData.lastName);
-          localStorage.setItem('uid', uid);
-
-
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.error("Error creating user:", errorCode, errorMessage);
-          return null;
-        });
-
-    // save user data to firestore
-    const request = {
-      uid: localStorage.getItem('uid'),
-      firstName: formData.firstName,
-      lastName: formData.lastName
-    }
-
-    // make POST request to /api/users
     try {
-      const response = await axios.post('../api/users', request);
+      // Create user with Firebase Authentication
+      const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+      const user = userCredential.user;
+      const uid = user.uid;
+
+      // Store user info in localStorage
+      const userData = {
+        uid,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+      };
+      localStorage.setItem("currentUser", JSON.stringify(userData));
+
+      // Save user data to Firestore
+      const response = await axios.post('../api/users', userData);
       console.log('Success:', response.data);
+
+      // Redirect to home page
+      window.location.href = '/home';
     } catch (error) {
-      console.error('Error:', error.message);
+      console.error("Error during signup:", error.message);
+      alert(error.message);
     }
-    console.log("Added user:", formData);
   };
 
   useEffect(() => {
@@ -74,7 +63,7 @@ export default function Register() {
       }
     };
 
-    fetchQuote();  // Fetch quote when the component mounts
+    fetchQuote();  // Fetch quote when component mounts
   }, []);
 
   return (
@@ -104,7 +93,7 @@ export default function Register() {
             HabitMaster
           </h1>
           <p className="m-3 quote text-center text-gray-700 italic mb-7">{`"${quote}"`}</p>
-          <div data-id="login-card">
+          <div data-id="register-card">
             <form onSubmit={handleRegister} className="flex flex-col">
               <p className="text-gray-950">First Name</p>
               <input
