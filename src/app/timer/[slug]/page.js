@@ -26,17 +26,30 @@ async function handleGetRequestWithID(id) {
 // main component
 export default function Timer() {
   const slug_id = usePathname().split('/')[2];
-  const [name, setName] = useState('');
+  const [name, setName] = useState();
+  const [date, setDate] = useState();
+  const [recurring, setRecurring] = useState();
+  const [category, setCategory] = useState();
+  const [remind, setRemind] = useState();
   const [duration, setDuration] = useState(0);
+  const [status, setStatus] = useState();
+
   const [originalDuration, setOriginalDuration] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
 
-  async function handleUpdate(e) { 
-    e.preventDefault();
+  async function handleUpdate() {
     const updatedActivity = {
       id: slug_id,
+      name: name,
+      date,
+      recurring,
+      duration,
+      category,
+      remind,
       status: 'completed'
     };
+
 
     // make PUT request to /api/activity to update data's status to completed
     try {
@@ -54,8 +67,14 @@ export default function Timer() {
     async function fetchData() {
       const getResult = await handleGetRequestWithID(slug_id);
       setDuration(getResult["data"].duration); 
-      setOriginalDuration(getResult["data"].duration);
+      setOriginalDuration(getResult["data"].duration); // used to reset the timer
       setName(getResult["data"].name);
+      setDate(getResult["data"].date);
+      setRecurring(getResult["data"].recurring);
+      setCategory(getResult["data"].category);
+      setRemind(getResult["data"].remind);
+      setStatus(getResult["data"].status);
+      setIsCompleted(getResult["data"].status === 'completed');
     }
     fetchData();
     
@@ -86,57 +105,68 @@ export default function Timer() {
         <div>
           <GoBackHeader text="Home"/>
           
+          {!isCompleted && (
+              <div className="flex flex-col items-center justify-center gap-4 h-screen p-4 max-sm:p-0 ">
+                <svg>
+                  <defs>
+                    <linearGradient id="linear-gradient" x1="1" y1="0" x2="0" y2="0">
+                      <stop offset="5%" stopColor="gold" />
+                      <stop offset="95%" stopColor="red" />
+                    </linearGradient>
+                  </defs>
+                </svg>
 
-          <div className="flex flex-col items-center justify-center gap-4 h-screen p-4 max-sm:p-0 ">
-            <svg>
-              <defs>
-                <linearGradient id="linear-gradient" x1="1" y1="0" x2="0" y2="0">
-                  <stop offset="5%" stopColor="gold" />
-                  <stop offset="95%" stopColor="red" />
-                </linearGradient>
-              </defs>
-            </svg>
-              
-            <CountdownCircleTimer
-              isPlaying={isPlaying}
-              duration={duration*60}
-              colors="url(#linear-gradient)"
-              colorsTime={[7, 5, 2, 0]}
-              onComplete={() => ({ shouldRepeat: false})}
-            >
-              {({ remainingTime }) => {
-                  const hours = Math.floor(remainingTime / 3600);
-                  const minutes = Math.floor(remainingTime / 60);
-                  const seconds = remainingTime % 60;
-                
-                  return (
-                    <>
-                      {remainingTime>10 &&
-                        <div className="text-xl font-bold" role="timer" aria-live="assertive">{hours}:{minutes}:{seconds}</div>
-                      }
-                      {
-                        remainingTime <= 10 &&
-                        <div className="text-xl font-bold" role="timer" aria-live="assertive">0{hours}:0{minutes}:0{seconds}</div>
-                      }
-                    </>
-                  )
-                }}
-            </CountdownCircleTimer>
+                <CountdownCircleTimer
+                  isPlaying={isPlaying}
+                  duration={duration*60}
+                  colors="url(#linear-gradient)"
+                  colorsTime={[7, 5, 2, 0]}
+                  onComplete={() => {
+                    setIsCompleted(true);
+                    handleUpdate();
+                    return { shouldRepeat: false};
+                  }}
+                >
+                  {({ remainingTime }) => {
+                      const hours = Math.floor(remainingTime / 3600);
+                      const minutes = Math.floor(remainingTime / 60);
+                      const seconds = remainingTime % 60;
 
-            {/*Button to Control Timer*/}
-              <div className="timer-controls">
-                  <button
-                      className="timer-icon-button"
-                      onClick={() => setIsPlaying((prev) => !prev)}
-                  >
-                      {isPlaying ? (
-                          <CiPause1 className="timer-icon"/>
-                      ) : (
-                          <CiPlay1 className="timer-icon"/>
-                      )}
-                  </button>
+                      return (
+                        <>
+                          {remainingTime>=10 &&
+                            <div className="text-xl font-bold" role="timer" aria-live="assertive">{hours}:{minutes}:{seconds}</div>
+                          }
+                          {
+                            remainingTime < 10 &&
+                            <div className="text-2xl text-primary-dark font-bold" role="timer" aria-live="assertive">{seconds}</div>
+                          }
+                        </>
+                      )
+                    }}
+                </CountdownCircleTimer>
+
+                {/*Button to Control Timer*/}
+                <div className="timer-controls">
+                    <button className="timer-icon-button" onClick={() => setIsPlaying((prev) => !prev)}>
+                        {isPlaying ? (
+                            <CiPause1 className="timer-icon"/>
+                        ) : (
+                            <CiPlay1 className="timer-icon"/>
+                        )}
+                    </button>
+                </div>
+
+
               </div>
-          </div>
+          )}
+          {isCompleted && (
+              <div className="flex flex-col items-center justify-center gap-4 h-screen p-4 max-sm:p-0 animate-grow">
+                <Image src={trophyImage} alt="trophy" width={100} height={100} />
+                <h1 className="text-4xl font-bold">Congratulations!</h1>
+                <h2 className="text-xl font-bold">You has completed {name}</h2>
+              </div>
+          )}
         </div>
     </div>
   );

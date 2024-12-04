@@ -79,6 +79,7 @@ export default function View() {
       duration: parseInt(formData.hour) * 60 + parseInt(formData.minute),
       category: formData.category,
       remind: formData.remind,
+      status: null, // set it to null so that status is not updated when when making PUT request
     };
 
     // make PUT request to /api/activity to update data

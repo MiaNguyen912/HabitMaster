@@ -47,3 +47,5 @@ npm run dev
 - clip path generator: https://www.cssportal.com/css-clip-path-generator/
 - firestore doc: https://firebase.google.com/docs/firestore/query-data/get-data, https://firebase.google.com/docs/firestore/query-data/queries
 - countdown clock React library: https://www.npmjs.com/package/react-countdown-circle-timer
+- GoogleChart API: https://www.w3schools.com/graphics/plot_google_chart.asp, https://developers.google.com/chart, https://www.react-google-charts.com/
+- chart.js API: https://www.chartjs.org/docs/latest/

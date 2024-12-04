@@ -1,8 +1,11 @@
 'use client';
 
 import MenuBar from "@/components/menu-bar";
+import ReportChart from "@/components/chart";
+import GoBackHeader from "@/components/goback-header";
 
 export default function Report() {
+
   return (
     <div className="bg-light-blue relative isolate overflow-clip">
         {/* paralax background decor*/}
@@ -21,10 +24,22 @@ export default function Report() {
             </div>
         </div>
 
+        
+        {/* header */}
+        <GoBackHeader text="Home"/>
+        
         {/* main content */}
-        <main className="flex flex-col justify-center gap-8 items-center min-h-screen">
-          This is the Report page
-        </main>
+        <div>
+            <div className="flex flex-col items-center justify-center gap-4 h-screen p-4 max-sm:p-0">
+         
+              <ReportChart/>
+
+
+        
+
+            </div>
+        </div>
+        
 
         {/* menu bar */}
         <MenuBar activeButton={"report"}/>
