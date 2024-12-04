@@ -3,6 +3,7 @@ import axios from "axios";
 import {useEffect, useState} from "react";
 import Link from 'next/link';
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import {auth} from "@/data/firebaseConfig";
 
 export default function Register() {
   const [quote, setQuote] = useState("");
@@ -25,10 +26,40 @@ export default function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
-    try {
-      const user = await createUserWithEmailAndPassword(formData.email, formData.password);
+    createUserWithEmailAndPassword(auth, formData.email, formData.password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user);
+
+          const uid = user.uid;
+          localStorage.setItem('firstName', formData.firstName);
+          localStorage.setItem('lastName', formData.lastName);
+          localStorage.setItem('uid', uid);
+
+
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.error("Error creating user:", errorCode, errorMessage);
+          return null;
+        });
+
+    // save user data to firestore
+    const request = {
+      uid: localStorage.getItem('uid'),
+      firstName: formData.firstName,
+      lastName: formData.lastName
     }
-    console.log("Submitted Data:", formData);
+
+    // make POST request to /api/users
+    try {
+      const response = await axios.post('../api/users', request);
+      console.log('Success:', response.data);
+    } catch (error) {
+      console.error('Error:', error.message);
+    }
+    console.log("Added user:", formData);
   };
 
   useEffect(() => {
