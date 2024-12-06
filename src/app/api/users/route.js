@@ -40,14 +40,6 @@ export async function GET(req) { // called when user logs in
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-            const userData = {
-                firstName: docSnap.data().firstName,
-                lastName: docSnap.data().lastName,
-                email: docSnap.data().email,
-            };
-
-            // Save user data as a JSON string in localStorage
-            localStorage.setItem("currentUser", JSON.stringify(userData));
 
             return Response.json({ status: 200, data: docSnap.data() });
         } else {

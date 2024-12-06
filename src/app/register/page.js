@@ -32,7 +32,7 @@ export default function Register() {
 
       // Store user info in localStorage
       const userData = {
-        uid,
+        uid: uid,
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
