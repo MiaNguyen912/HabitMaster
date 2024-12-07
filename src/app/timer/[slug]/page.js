@@ -38,11 +38,11 @@ export default function Timer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
 
-  async function handleUpdate() { 
+  async function handleUpdate() {
     const updatedActivity = {
       id: slug_id,
       name: name,
-      date, 
+      date,
       recurring,
       duration,
       category,
@@ -58,6 +58,9 @@ export default function Timer() {
     } catch (error) {
         console.error('Error:', error.message);
     }
+    alert(`You has completed ${name}`);
+    window.location.href = '/';
+  
   }
 
   useEffect(() => {
@@ -112,7 +115,7 @@ export default function Timer() {
                     </linearGradient>
                   </defs>
                 </svg>
-                  
+
                 <CountdownCircleTimer
                   isPlaying={isPlaying}
                   duration={duration*60}
@@ -128,7 +131,7 @@ export default function Timer() {
                       const hours = Math.floor(remainingTime / 3600);
                       const minutes = Math.floor(remainingTime / 60);
                       const seconds = remainingTime % 60;
-                    
+
                       return (
                         <>
                           {remainingTime>=10 &&

@@ -13,7 +13,7 @@ export default function MenuBar({activeButton}) {
         <div className="flex w-full md:h-fit h-fit justify-around">
           
           {/* Home */}
-          <Link onClick={() => handleButtonClick('home')} href="/" className={`${activeButton==='home'? 'text-primary' : 'text-tertiary'} flex flex-col items-center justify-center  md:text-lg text-sm font-semibold hover:text-accent`}>
+          <Link onClick={() => handleButtonClick('home')} href="/home" className={`${activeButton==='home'? 'text-primary' : 'text-tertiary'} flex flex-col items-center justify-center  md:text-lg text-sm font-semibold hover:text-accent`}>
             {activeButton === 'home' ? <FaHome size={24} /> : <FaRegCalendar size={24} />}
             <span>Home</span>
           </Link>

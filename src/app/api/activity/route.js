@@ -1,42 +1,37 @@
-import {db} from "@/data/firebaseConfig";
-import {collection, doc, setDoc, getDoc, getDocs, query, where, deleteDoc} from "firebase/firestore";
-
+import { db } from "@/data/firebaseConfig";
+import { collection, doc, setDoc, getDoc, getDocs, query, where, deleteDoc } from "firebase/firestore";
 
 // ------------------------- create a new activity ------------------------
-export async function POST(req, res) { // This function will be called when the contact form is submitted with a POST request
-    // return Response.json({ message: "POST request succeeds"}, { status: 200 }); 
-
-    // Get the data from the request
+export async function POST(req, res) {
     const body = await req.json();
-    let { name, date, recurring, duration, category, remind } = body;
+    let { uid, name, date, recurring, duration, category, remind } = body;
+
+
 
     const newActivity = {
+        uid,
         name,
         date,
         recurring,
         duration,
         category,
         status: "incompleted",
-        remind
+        remind,
     };
 
-    // write data to db
     const collectionRef = collection(db, "activities");
     try {
-        // Create a new document with an auto-generated ID within the "activities" collection
-        const docRef = doc(collectionRef); // Generates a new document reference
-        await setDoc(docRef, newActivity); // Write data to the new document
-
-        return Response.json({ status:200, message: "success" }); 
+        const docRef = doc(collectionRef);
+        await setDoc(docRef, newActivity);
+        return Response.json({ status: 200, message: "success" });
     } catch (error) {
         console.log(error);
-        return Response.json({  status:500, error: error.message });
+        return Response.json({ status: 500, error: error.message });
     }
 }
 
-
 // ------------------------- read activities (all, by date, by id) -------------------------
-async function getActivitiesByDate(targetDate, res) {
+async function getActivitiesByDate(targetDate, uid) {
     const daysOfWeek = {
         0: "Sun",
         1: "Mon",
@@ -44,149 +39,149 @@ async function getActivitiesByDate(targetDate, res) {
         3: "Wed",
         4: "Thu",
         5: "Fri",
-        6: "Sat"
+        6: "Sat",
     };
     const targetDateOfWeek = targetDate.getDay();
 
     try {
         const data = [];
         const collectionRef = collection(db, "activities");
-  
+
         const q = query(
-            collectionRef, 
+            collectionRef,
+            where("uid", "==", uid),
             where("date", ">=", targetDate.toDateString()),
             where("recurring", "array-contains", daysOfWeek[targetDateOfWeek])
         );
+
         const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+            return Response.json({ status: 200, message: "No activities found", data: [] });
+        }
+
         querySnapshot.forEach((doc) => {
-            data.push({ id: doc.id, ...doc.data()});
+            data.push({ id: doc.id, ...doc.data() });
         });
 
-        // get the daily_completed activities for the target date and update the status of the activity (since status is set to "incompleted" by default)
-        const targetDateCompleted_docRef = doc(db, "daily_completed", targetDate.toDateString());
-        const targetDateCompleted_doc_snapshot = await getDoc(targetDateCompleted_docRef);
+        const targetDateCompletedDocRef = doc(db, "daily_completed", targetDate.toDateString());
+        const targetDateCompletedSnapshot = await getDoc(targetDateCompletedDocRef);
         let completedActivities = [];
-        if (targetDateCompleted_doc_snapshot.exists()) {
-            completedActivities = targetDateCompleted_doc_snapshot.data().activity_id;
+        if (targetDateCompletedSnapshot.exists()) {
+            completedActivities = targetDateCompletedSnapshot.data().activity_id;
         }
+
         data.forEach((activity) => {
             if (completedActivities.includes(activity.id)) {
-                activity.status = "completed"; // update the status 
+                activity.status = "completed";
             }
         });
 
-
-        return Response.json({ status:200, message: "success", data: data });
+        return Response.json({ status: 200, message: "success", data });
     } catch (error) {
         console.log(error);
-        return Response.json({ status:500, error: error.message });
+        return Response.json({ status: 500, error: error.message });
     }
 }
-async function getAllActivities() {
+
+async function getAllActivities(uid) {
     try {
         const data = [];
         const collectionRef = collection(db, "activities");
-        const docSnapshot = await getDocs(collectionRef);
-        docSnapshot.forEach((doc) => {
-            data.push({ id: doc.id, ...doc.data()});
+
+        const q = query(collectionRef, where("uid", "==", uid));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+            return Response.json({ status: 200, message: "No activities found", data: [] });
+        }
+
+        querySnapshot.forEach((doc) => {
+            data.push({ id: doc.id, ...doc.data() });
         });
-        return Response.json({ status:200, message: "success", data: data });
+
+        return Response.json({ status: 200, message: "success", data });
     } catch (error) {
         console.log(error);
-        return Response.json({ status:500, error: error.message });
+        return Response.json({ status: 500, error: error.message });
     }
 }
 
 async function getActivityByID(id) {
     try {
-        const docRef = doc(db, "activities", id); // id is used as the doc name
+        const docRef = doc(db, "activities", id);
         const docSnapshot = await getDoc(docRef);
         if (docSnapshot.exists()) {
-            return Response.json({ status:200, message: "success", data: { id: id, ...docSnapshot.data()}}); 
+            return Response.json({ status: 200, message: "success", data: { id, ...docSnapshot.data() } });
         } else {
-            return Response.json({ status:404, message: "No such document!" });
+            return Response.json({ status: 404, message: "No such document!" });
         }
     } catch (error) {
         console.log(error);
-        return Response.json({ status:500, error: error.message });
+        return Response.json({ status: 500, error: error.message });
     }
 }
-
 
 export async function GET(req, res) {
     const url = new URL(req.url);
     const searchParams = new URLSearchParams(url.searchParams);
-    const targetDate = searchParams.get("date");    // url: /api/activity?date=%222024/11/15%22
-    const id = searchParams.get("id");    // url: /api/activity?id=%22abcdefc%22
+    const targetDate = searchParams.get("date");
+    const id = searchParams.get("id");
+    const uid = searchParams.get("uid");
+
+
     if (targetDate) {
-        return getActivitiesByDate(new Date(targetDate));
+        return getActivitiesByDate(new Date(targetDate), uid);
     } else if (id) {
         return getActivityByID(id);
     } else {
-        return getAllActivities();
+        return getAllActivities(uid);
     }
 }
 
-
-// ------------------------- update an activity-------------------------
+// ------------------------- update an activity -------------------------
 export async function PUT(req, res) {
     const body = await req.json();
     const { id, name, recurring, date, duration, category, remind, status } = body;
 
-    const updatedActivity = {
-        name,
-        date,
-        recurring,
-        duration,
-        category,
-        remind,
-    };
-    console.log(updatedActivity);
-    const activities_docRef = doc(db, "activities", id);
-    try {
-        await setDoc(activities_docRef, updatedActivity, { merge: true });
+    const updatedActivity = { name, date, recurring, duration, category, remind };
 
-        // add id to the daily_completed doc if status change to "completed"
+    const activitiesDocRef = doc(db, "activities", id);
+    try {
+        await setDoc(activitiesDocRef, updatedActivity, { merge: true });
+
         if (status === "completed") {
             const today = new Date();
-            const todayCompleted_docRef = doc(db, "daily_completed", today.toDateString());
-            const todayCompleted_doc_snapshot = await getDoc(todayCompleted_docRef);
+            const todayCompletedDocRef = doc(db, "daily_completed", today.toDateString());
+            const todayCompletedSnapshot = await getDoc(todayCompletedDocRef);
 
-            // if the date is not in the daily_completed collection, create a new doc
-            if (!todayCompleted_doc_snapshot.exists()) {
-                await setDoc(todayCompleted_docRef, { activity_id: [id] });
+            if (!todayCompletedSnapshot.exists()) {
+                await setDoc(todayCompletedDocRef, { activity_id: [id] });
             } else {
-                // else, update the existing doc
-                if (!todayCompleted_doc_snapshot.data().activity_id.includes(id)) {
-                    const updatedActivityList = [...todayCompleted_doc_snapshot.data().activity_id, id];
-                    await setDoc(todayCompleted_docRef, { activity_id: updatedActivityList });
+                if (!todayCompletedSnapshot.data().activity_id.includes(id)) {
+                    const updatedActivityList = [...todayCompletedSnapshot.data().activity_id, id];
+                    await setDoc(todayCompletedDocRef, { activity_id: updatedActivityList });
                 }
             }
-
-
-        }   
-        return Response.json({ status:200, message: "success" });
+        }
+        return Response.json({ status: 200, message: "success" });
     } catch (error) {
         console.log(error);
-        return Response.json({ status:500, error: error.message });
+        return Response.json({ status: 500, error: error.message });
     }
-
-   
 }
-
 
 // ------------------------- delete an activity -------------------------
 export async function DELETE(req, res) {
     const body = await req.json();
     const { id } = body;
-    console.log(id);
 
     const docRef = doc(db, "activities", id);
     try {
         await deleteDoc(docRef);
-        return Response.json({ status:200, message: "success" });
+        return Response.json({ status: 200, message: "success" });
     } catch (error) {
         console.log(error);
-        return Response.json({ status:500, error: error.message });
+        return Response.json({ status: 500, error: error.message });
     }
 }
