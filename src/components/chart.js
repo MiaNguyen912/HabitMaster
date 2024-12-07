@@ -39,15 +39,16 @@ function calculateCompletedPercentage(activities) {
 
 const ReportChart = () => {
     const [selectedWeekIndex, setSelectedWeekIndex] = useState(0);
-    const [monActivities, setMonActivities] = useState([]);
-    const [tueActivities, setTueActivities] = useState([]);
-    const [wedActivities, setWedActivities] = useState([]);
-    const [thuActivities, setThuActivities] = useState([]);
-    const [friActivities, setFriActivities] = useState([]);
-    const [satActivities, setSatActivities] = useState([]);
-    const [sunActivities, setSunActivities] = useState([]);
+    // const [monActivities, setMonActivities] = useState([]);
+    // const [tueActivities, setTueActivities] = useState([]);
+    // const [wedActivities, setWedActivities] = useState([]);
+    // const [thuActivities, setThuActivities] = useState([]);
+    // const [friActivities, setFriActivities] = useState([]);
+    // const [satActivities, setSatActivities] = useState([]);
+    // const [sunActivities, setSunActivities] = useState([]);
 
-    const weekDayActivities = [monActivities, tueActivities, wedActivities, thuActivities, friActivities, satActivities, sunActivities];
+    // const weekDayActivities = [monActivities, tueActivities, wedActivities, thuActivities, friActivities, satActivities, sunActivities];
+    const [activitiesByDay, setActivitiesByDay] = useState([[], [], [], [], [], [], []]);
 
     useEffect(() => {
         const weekDays = findCurrentWeekDates();
@@ -56,30 +57,45 @@ const ReportChart = () => {
           try {
             // Fetch activities for all days in parallel
             const responses = await Promise.all(
-              weekDays.map((date) =>{
-                const result = axios.get('/../api/activity', { params: { date: date } });
-                return result;
-              })
+            //   weekDays.map((date) =>{
+            //     const result = axios.get('/../api/activity', { params: { date: date } });
+            //     return result;
+            //   })
+                weekDays.map(date =>
+                    axios.get('/../api/activity', { params: { date: date } })
+                )
             );
-            setMonActivities(responses[0].data.data);
-            setTueActivities(responses[1].data.data);
-            setWedActivities(responses[2].data.data);
-            setThuActivities(responses[3].data.data);
-            setFriActivities(responses[4].data.data);
-            setSatActivities(responses[5].data.data);
-            setSunActivities(responses[6].data.data);
+            // setMonActivities(responses[0].data.data);
+            // setTueActivities(responses[1].data.data);
+            // setWedActivities(responses[2].data.data);
+            // setThuActivities(responses[3].data.data);
+            // setFriActivities(responses[4].data.data);
+            // setSatActivities(responses[5].data.data);
+            // setSunActivities(responses[6].data.data);
+
+            // Extract activity data and default to an empty array if no data exists
+            const allActivities = responses.map(res =>
+                res.data?.data ?? []
+            );
+            setActivitiesByDay(allActivities);
           } catch (error) {
-            console.error('Error:', error.message);
+            console.error('Error fetching activities:', error.message);
+            setActivitiesByDay([[], [], [], [], [], [], []]); // Set all days to empty activities if there's an error
           }
         }
       
         fetchData();
     }, []); 
     
-    const completedPercentageList = [];
-    weekDayActivities.forEach((dayActivities) => {
-        completedPercentageList.push(calculateCompletedPercentage(dayActivities));
-    }); 
+     // Calculate percentages for each day
+    // const completedPercentageList = [];
+    // weekDayActivities.forEach((dayActivities) => {
+    //     completedPercentageList.push(calculateCompletedPercentage(dayActivities));
+    // }); 
+    const completedPercentageList = activitiesByDay.map(dayActivities =>
+        calculateCompletedPercentage(dayActivities)
+    );
+
 
 
 
@@ -97,7 +113,7 @@ const ReportChart = () => {
             borderWidth: 1,
             borderRadius: 8, // Rounded corners
             // barThickness: 24, // in pixels
-            maxBarThickness: 32, // in pixels
+            maxBarThickness: 32, // Max bar thickness in pixels
             barPercentage: 0.5,
             hoverBorderColor: 'blue',
             hoverBackgroundColor: 'red', 
