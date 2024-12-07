@@ -97,7 +97,7 @@ export default function View() {
   function handleCancel(e) {
     e.preventDefault();
     setFormData(originalData);
-    window.location.href = '/';
+    window.location.href = '/home';
   }
 
   async function handleDelete(e) {
@@ -111,7 +111,7 @@ export default function View() {
         console.error('Error:', error.message);
     }
     alert("Your activity has been deleted!");
-    window.location.href = '/';
+    window.location.href = '/home';
   }
 
  
