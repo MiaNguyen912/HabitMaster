@@ -51,7 +51,12 @@ export default function AddActivity() {
     if (formData.minute === '') {
       formData.minute = 0;
     }
+
+    const user = localStorage.getItem("currentUser");
+    const uid = user ? JSON.parse(user).uid : null;
+
     const adjustedFormData = {
+      uid: uid,
       name: formData.name,
       date: (new Date((formData.date).replace(/-/g, '/'))).toDateString(),
       recurring: daysOfWeek.filter(day => formData[`recurring${day}`]),

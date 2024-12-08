@@ -2,21 +2,20 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Bar } from 'react-chartjs-2';
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
 } from 'chart.js';
 import classes from '@/styles/chart.module.css';
 
 // Register the necessary components with Chart.js
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-
-function findCurrentWeekDates(){ // find the dates of mon-sun of the current week
+function findCurrentWeekDates() {
     const weekDays = [];
     const today = new Date();
     const dayOfWeek = today.getDay(); // 0 (Sunday) to 6 (Saturday)
@@ -32,10 +31,10 @@ function findCurrentWeekDates(){ // find the dates of mon-sun of the current wee
 }
 
 function calculateCompletedPercentage(activities) {
+    if (!activities || activities.length === 0) return 0; // Handle empty or undefined activities
     const numCompleted = activities.filter(activity => activity.status === "completed").length;
-    if (activities.length === 0) return 0;
-    return Math.round(numCompleted / activities.length * 100);
-}  
+    return Math.round((numCompleted / activities.length) * 100);
+}
 
 const ReportChart = () => {
     const [selectedWeekIndex, setSelectedWeekIndex] = useState(0);
@@ -91,7 +90,7 @@ const ReportChart = () => {
     // const completedPercentageList = [];
     // weekDayActivities.forEach((dayActivities) => {
     //     completedPercentageList.push(calculateCompletedPercentage(dayActivities));
-    // }); 
+    // });
     const completedPercentageList = activitiesByDay.map(dayActivities =>
         calculateCompletedPercentage(dayActivities)
     );
@@ -126,11 +125,11 @@ const ReportChart = () => {
     const options = {
         responsive: true,
         plugins: {
-        legend: { display: false },
-        title: {
-            display: true,
-            text: 'Your Weekly Progress',
-        },
+            legend: { display: false },
+            title: {
+                display: true,
+                text: 'Your Weekly Progress',
+            },
         },
         scales: {
             y: {
