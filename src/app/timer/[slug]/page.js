@@ -105,7 +105,7 @@ export default function Timer() {
         <div>
           <GoBackHeader text="Home"/>
           
-          {!isCompleted && (
+          {!isCompleted && duration!=0 && (
               <div className="flex flex-col items-center justify-center gap-4 h-screen p-4 max-sm:p-0 ">
                 <svg>
                   <defs>
@@ -160,7 +160,7 @@ export default function Timer() {
 
               </div>
           )}
-          {isCompleted && (
+          {(isCompleted || duration==0) && (
               <div className="flex flex-col items-center justify-center gap-4 h-screen p-4 max-sm:p-0 animate-grow">
                 <Image src={trophyImage} alt="trophy" width={100} height={100} />
                 <h1 className="text-4xl font-bold">Congratulations!</h1>

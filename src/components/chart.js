@@ -21,6 +21,7 @@ function findCurrentWeekDates() {
     const dayOfWeek = today.getDay(); // 0 (Sunday) to 6 (Saturday)
     const diffToMonday = (dayOfWeek === 0 ? -6 : 1) - dayOfWeek;
 
+   
     for (let i = 0; i <= 6; i++) { // Set the first day to Monday and loop through 7 days
         const day = new Date(today); // Create a new date for each day
         day.setDate(today.getDate() + diffToMonday + i); // Calculate each day's date
@@ -37,56 +38,86 @@ function calculateCompletedPercentage(activities) {
 
 const ReportChart = () => {
     const [selectedWeekIndex, setSelectedWeekIndex] = useState(0);
+    // const [monActivities, setMonActivities] = useState([]);
+    // const [tueActivities, setTueActivities] = useState([]);
+    // const [wedActivities, setWedActivities] = useState([]);
+    // const [thuActivities, setThuActivities] = useState([]);
+    // const [friActivities, setFriActivities] = useState([]);
+    // const [satActivities, setSatActivities] = useState([]);
+    // const [sunActivities, setSunActivities] = useState([]);
+
+    // const weekDayActivities = [monActivities, tueActivities, wedActivities, thuActivities, friActivities, satActivities, sunActivities];
     const [activitiesByDay, setActivitiesByDay] = useState([[], [], [], [], [], [], []]);
 
     useEffect(() => {
         const weekDays = findCurrentWeekDates();
-
+      
         async function fetchData() {
-            try {
-                // Fetch activities for all days in parallel
-                const responses = await Promise.all(
-                    weekDays.map(date =>
-                        axios.get('/../api/activity', { params: { date: date } })
-                    )
-                );
-                // Extract activity data and default to an empty array if no data exists
-                const allActivities = responses.map(res =>
-                    res.data?.data ?? []
-                );
-                setActivitiesByDay(allActivities);
-            } catch (error) {
-                console.error('Error fetching activities:', error.message);
-                // Set all days to empty activities if there's an error
-                setActivitiesByDay([[], [], [], [], [], [], []]);
-            }
+          try {
+            // Fetch activities for all days in parallel
+            const responses = await Promise.all(
+            //   weekDays.map((date) =>{
+            //     const result = axios.get('/../api/activity', { params: { date: date } });
+            //     return result;
+            //   })
+                weekDays.map(date =>
+                    axios.get('/../api/activity', { params: { date: date } })
+                )
+            );
+            // setMonActivities(responses[0].data.data);
+            // setTueActivities(responses[1].data.data);
+            // setWedActivities(responses[2].data.data);
+            // setThuActivities(responses[3].data.data);
+            // setFriActivities(responses[4].data.data);
+            // setSatActivities(responses[5].data.data);
+            // setSunActivities(responses[6].data.data);
+
+            // Extract activity data and default to an empty array if no data exists
+            const allActivities = responses.map(res =>
+                res.data?.data ?? []
+            );
+            setActivitiesByDay(allActivities);
+          } catch (error) {
+            console.error('Error fetching activities:', error.message);
+            setActivitiesByDay([[], [], [], [], [], [], []]); // Set all days to empty activities if there's an error
+          }
         }
-
+      
         fetchData();
-    }, []);
-
-    // Calculate percentages for each day
+    }, []); 
+    
+     // Calculate percentages for each day
+    // const completedPercentageList = [];
+    // weekDayActivities.forEach((dayActivities) => {
+    //     completedPercentageList.push(calculateCompletedPercentage(dayActivities));
+    // });
     const completedPercentageList = activitiesByDay.map(dayActivities =>
         calculateCompletedPercentage(dayActivities)
     );
+
+
+
+
 
     // Chart data
     const data = {
         labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
         datasets: [
-            {
-                label: 'Task Completion',
-                data: completedPercentageList,
-                unit: '%',
-                backgroundColor: 'rgba(255, 99, 132, 0.6)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1,
-                borderRadius: 8, // Rounded corners
-                maxBarThickness: 32, // Max bar thickness in pixels
-                barPercentage: 0.5,
-                hoverBorderColor: 'blue',
-                hoverBackgroundColor: 'red',
-            },
+        {
+            label: 'Task Completion',
+            data: completedPercentageList,
+            unit: '%',
+            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1,
+            borderRadius: 8, // Rounded corners
+            // barThickness: 24, // in pixels
+            maxBarThickness: 32, // Max bar thickness in pixels
+            barPercentage: 0.5,
+            hoverBorderColor: 'blue',
+            hoverBackgroundColor: 'red', 
+
+        },
         ],
     };
 
@@ -102,23 +133,28 @@ const ReportChart = () => {
         },
         scales: {
             y: {
+                display: true,
                 beginAtZero: true,
+                padding: 10,
                 max: 100,
                 grid: {
                     display: false,
                 },
             },
             x: {
-                grid: {
+                axis: {
                     display: false,
                 },
+                grid: {
+                    display: false,
+                }
             },
         },
     };
 
     return (
         <div className="w-full max-w-md mx-auto mt-10">
-            <Bar data={data} options={options} className={`${classes.chart}`} />
+            <Bar data={data} options={options} className={`${classes.chart}`}/>
         </div>
     );
 };
