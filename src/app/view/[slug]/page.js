@@ -90,7 +90,7 @@ export default function View() {
         console.error('Error:', error.message);
     }
     alert("Your activity has been updated!");
-    window.location.href = '/';
+    window.location.href = '/home';
   
   }
 
