@@ -39,40 +39,10 @@ function calculateCompletedPercentage(activities) {
 const ReportChart = ({activitiesByDay}) => {
     const [selectedWeekIndex, setSelectedWeekIndex] = useState(0);
     
-    // // const weekDayActivities = [monActivities, tueActivities, wedActivities, thuActivities, friActivities, satActivities, sunActivities];
-    // const [activitiesByDay, setActivitiesByDay] = useState([[], [], [], [], [], [], []]);
-
-    // useEffect(() => {
-    //     const weekDays = findCurrentWeekDates();
-      
-    //     async function fetchData() {
-    //       try {
-    //         // Fetch activities for all days in parallel
-    //         const user = localStorage.getItem("currentUser");
-    //         const uid = user ? JSON.parse(user).uid : null;
-    //         const responses = await Promise.all(
-    //             weekDays.map(date =>axios.get('/../api/activity', { params: { uid: uid, date: date } }))
-    //         );
-    //         // Extract activity data and default to an empty array if no data exists
-    //         const allActivities = responses.map(res =>
-    //             res.data?.data ?? []
-    //         );
-    //         setActivitiesByDay(allActivities);
-    //       } catch (error) {
-    //         console.error('Error fetching activities:', error.message);
-    //         setActivitiesByDay([[], [], [], [], [], [], []]); // Set all days to empty activities if there's an error
-    //       }
-    //     }
-      
-    //     fetchData();
-    // }, []); 
-    
     // Calculate percentages for each day
     const completedPercentageList = activitiesByDay.map(dayActivities =>
         calculateCompletedPercentage(dayActivities)
     );
-
-
 
 
 
@@ -93,7 +63,6 @@ const ReportChart = ({activitiesByDay}) => {
                 barPercentage: 0.5,
                 hoverBorderColor: 'blue',
                 hoverBackgroundColor: 'red', 
-
             },
         ],
     };
