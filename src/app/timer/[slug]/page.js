@@ -31,14 +31,14 @@ export default function Timer() {
   const [recurring, setRecurring] = useState();
   const [category, setCategory] = useState();
   const [remind, setRemind] = useState();
-  const [duration, setDuration] = useState(0);
-  const [status, setStatus] = useState();
-
-  const [originalDuration, setOriginalDuration] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [duration, setDuration] = useState(1); // set default at 1 minute so that the cup icon will not show up when the page is loading
   const [isCompleted, setIsCompleted] = useState(false);
 
-  async function handleUpdate() {
+  const [currentDuration, setCurrentDuration] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [quote, setQuote] = useState("");
+
+  async function handleComplete() {
     const updatedActivity = {
       id: slug_id,
       name: name,
@@ -49,7 +49,7 @@ export default function Timer() {
       remind,
       status: 'completed'
     };
-
+    const [quote, setQuote] = useState("");
 
     // make PUT request to /api/activity to update data's status to completed
     try {
@@ -63,7 +63,7 @@ export default function Timer() {
   
   }
 
-  useEffect(() => {
+  useEffect(() => { // fetch data 
     async function fetchData() {
       const getResult = await handleGetRequestWithID(slug_id);
       setDuration(getResult["data"].duration); 
@@ -73,12 +73,23 @@ export default function Timer() {
       setRecurring(getResult["data"].recurring);
       setCategory(getResult["data"].category);
       setRemind(getResult["data"].remind);
-      setStatus(getResult["data"].status);
       setIsCompleted(getResult["data"].status === 'completed');
     }
     fetchData();
     
   } ,[slug_id]);
+
+  useEffect(() => { // Function to fetch a quote from ZenQuotes API
+    const fetchQuote = async () => {
+        try {
+            const response = await axios.get("https://quoteslate.vercel.app/api/quotes/random");
+            setQuote(response.data.quote); // Set the quote to state
+        } catch (error) {
+            console.error("Error fetching the quote:", error);
+        }
+    };
+    fetchQuote(); // Fetch quote when the component mounts
+  }, []);
 
 
 
@@ -123,7 +134,7 @@ export default function Timer() {
                   colorsTime={[7, 5, 2, 0]}
                   onComplete={() => {
                     setIsCompleted(true);
-                    handleUpdate();
+                    handleComplete();
                     return { shouldRepeat: false};
                   }}
                 >
@@ -157,9 +168,12 @@ export default function Timer() {
                     </button>
                 </div>
 
+                {/* quote */}
+                <p className="max-w-sm m-4 rounded-xl bg-secondary/50 py-4 px-6 text-center text-gray-700 italic mb-7">{`"${quote}"`}</p>
 
               </div>
           )}
+
           {(isCompleted || duration==0) && (
               <div className="flex flex-col items-center justify-center gap-4 h-screen p-4 max-sm:p-0 animate-grow">
                 <Image src={trophyImage} alt="trophy" width={100} height={100} />
