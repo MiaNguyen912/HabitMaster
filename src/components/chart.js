@@ -37,10 +37,6 @@ function calculateCompletedPercentage(activities) {
 }
 
 const ReportChart = ({activitiesByDay}) => {
-    if (!activitiesByDay) {
-        return <p>Loading...</p>;
-    }
-
     const [selectedWeekIndex, setSelectedWeekIndex] = useState(0);
     
     // // const weekDayActivities = [monActivities, tueActivities, wedActivities, thuActivities, friActivities, satActivities, sunActivities];
@@ -132,7 +128,9 @@ const ReportChart = ({activitiesByDay}) => {
             },
         },
     };
-
+    if (!activitiesByDay) {
+        return <p>Loading...</p>;
+    }
     return (
         <div className="w-full max-w-md ">
             <Bar data={data} options={options} className={`${classes.chart}`}/>
