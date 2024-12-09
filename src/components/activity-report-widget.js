@@ -23,7 +23,7 @@ export default function ActivityReportWidget({name, duration, unit, category, co
     const completedQuantity = duration*completionCount;
 
     return (
-        <div className='relative w-full flex'>
+        <div className='relative w-full flex mb-4'>
             <div className={`bg-secondary bg-opacity-80 px-6 py-4 rounded-xl w-full widget-shadow`}>
                 <div className='flex flex-row justify-start gap-8'>
                     <div>

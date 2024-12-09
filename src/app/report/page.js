@@ -120,7 +120,7 @@ export default function Report() {
                     {/* <ActivityReportWidget name="Study" duration={30} unit={"minute"} category="study" completionCount={3} totalCount={5}/> */}
                     {summarizedActivities && Object.entries(summarizedActivities).map(([id, activity]) => {
                         return (
-                            <ActivityReportWidget key={id} {...activity} />
+                            <ActivityReportWidget key={id} {...activity}/>
                         );
                     })} 
                 </div>

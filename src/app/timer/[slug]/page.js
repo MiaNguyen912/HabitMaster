@@ -49,7 +49,7 @@ export default function Timer() {
       remind,
       status: 'completed'
     };
-    const [quote, setQuote] = useState("");
+    
 
     // make PUT request to /api/activity to update data's status to completed
     try {
