@@ -1,5 +1,5 @@
 'use client';
-import { use, useEffect, useState } from 'react';
+import {useEffect, useState } from 'react';
 import axios from 'axios';
 import MenuBar from "@/components/menu-bar";
 import ReportChart from "@/components/chart";
