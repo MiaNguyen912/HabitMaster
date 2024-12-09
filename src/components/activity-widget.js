@@ -6,7 +6,6 @@ import { MdWork } from "react-icons/md";
 import { RiMentalHealthFill } from "react-icons/ri";
 import { FaArrowTrendUp, FaArrowRightLong, FaCircleCheck } from "react-icons/fa6";
 import { BsTrash3Fill } from "react-icons/bs";
-import axios from 'axios';
 
 
 const categoryIcon = {

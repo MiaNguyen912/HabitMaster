@@ -36,61 +36,42 @@ function calculateCompletedPercentage(activities) {
     return Math.round((numCompleted / activities.length) * 100);
 }
 
-const ReportChart = () => {
+const ReportChart = ({activitiesByDay}) => {
+    if (!activitiesByDay) {
+        return <p>Loading...</p>;
+    }
+
     const [selectedWeekIndex, setSelectedWeekIndex] = useState(0);
-    // const [monActivities, setMonActivities] = useState([]);
-    // const [tueActivities, setTueActivities] = useState([]);
-    // const [wedActivities, setWedActivities] = useState([]);
-    // const [thuActivities, setThuActivities] = useState([]);
-    // const [friActivities, setFriActivities] = useState([]);
-    // const [satActivities, setSatActivities] = useState([]);
-    // const [sunActivities, setSunActivities] = useState([]);
-
-    // const weekDayActivities = [monActivities, tueActivities, wedActivities, thuActivities, friActivities, satActivities, sunActivities];
-    const [activitiesByDay, setActivitiesByDay] = useState([[], [], [], [], [], [], []]);
-
-    useEffect(() => {
-        const weekDays = findCurrentWeekDates();
-      
-        async function fetchData() {
-          try {
-            // Fetch activities for all days in parallel
-            const responses = await Promise.all(
-            //   weekDays.map((date) =>{
-            //     const result = axios.get('/../api/activity', { params: { date: date } });
-            //     return result;
-            //   })
-                weekDays.map(date =>
-                    axios.get('/../api/activity', { params: { date: date } })
-                )
-            );
-            // setMonActivities(responses[0].data.data);
-            // setTueActivities(responses[1].data.data);
-            // setWedActivities(responses[2].data.data);
-            // setThuActivities(responses[3].data.data);
-            // setFriActivities(responses[4].data.data);
-            // setSatActivities(responses[5].data.data);
-            // setSunActivities(responses[6].data.data);
-
-            // Extract activity data and default to an empty array if no data exists
-            const allActivities = responses.map(res =>
-                res.data?.data ?? []
-            );
-            setActivitiesByDay(allActivities);
-          } catch (error) {
-            console.error('Error fetching activities:', error.message);
-            setActivitiesByDay([[], [], [], [], [], [], []]); // Set all days to empty activities if there's an error
-          }
-        }
-      
-        fetchData();
-    }, []); 
     
-     // Calculate percentages for each day
-    // const completedPercentageList = [];
-    // weekDayActivities.forEach((dayActivities) => {
-    //     completedPercentageList.push(calculateCompletedPercentage(dayActivities));
-    // });
+    // // const weekDayActivities = [monActivities, tueActivities, wedActivities, thuActivities, friActivities, satActivities, sunActivities];
+    // const [activitiesByDay, setActivitiesByDay] = useState([[], [], [], [], [], [], []]);
+
+    // useEffect(() => {
+    //     const weekDays = findCurrentWeekDates();
+      
+    //     async function fetchData() {
+    //       try {
+    //         // Fetch activities for all days in parallel
+    //         const user = localStorage.getItem("currentUser");
+    //         const uid = user ? JSON.parse(user).uid : null;
+    //         const responses = await Promise.all(
+    //             weekDays.map(date =>axios.get('/../api/activity', { params: { uid: uid, date: date } }))
+    //         );
+    //         // Extract activity data and default to an empty array if no data exists
+    //         const allActivities = responses.map(res =>
+    //             res.data?.data ?? []
+    //         );
+    //         setActivitiesByDay(allActivities);
+    //       } catch (error) {
+    //         console.error('Error fetching activities:', error.message);
+    //         setActivitiesByDay([[], [], [], [], [], [], []]); // Set all days to empty activities if there's an error
+    //       }
+    //     }
+      
+    //     fetchData();
+    // }, []); 
+    
+    // Calculate percentages for each day
     const completedPercentageList = activitiesByDay.map(dayActivities =>
         calculateCompletedPercentage(dayActivities)
     );
@@ -103,21 +84,21 @@ const ReportChart = () => {
     const data = {
         labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
         datasets: [
-        {
-            label: 'Task Completion',
-            data: completedPercentageList,
-            unit: '%',
-            backgroundColor: 'rgba(255, 99, 132, 0.6)',
-            borderColor: 'rgba(255, 99, 132, 1)',
-            borderWidth: 1,
-            borderRadius: 8, // Rounded corners
-            // barThickness: 24, // in pixels
-            maxBarThickness: 32, // Max bar thickness in pixels
-            barPercentage: 0.5,
-            hoverBorderColor: 'blue',
-            hoverBackgroundColor: 'red', 
+            {
+                label: 'Task Completion',
+                data: completedPercentageList,
+                unit: '%',
+                backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1,
+                borderRadius: 8, // Rounded corners
+                // barThickness: 24, // in pixels
+                maxBarThickness: 32, // Max bar thickness in pixels
+                barPercentage: 0.5,
+                hoverBorderColor: 'blue',
+                hoverBackgroundColor: 'red', 
 
-        },
+            },
         ],
     };
 
@@ -153,7 +134,7 @@ const ReportChart = () => {
     };
 
     return (
-        <div className="w-full max-w-md mx-auto mt-10">
+        <div className="w-full max-w-md ">
             <Bar data={data} options={options} className={`${classes.chart}`}/>
         </div>
     );
