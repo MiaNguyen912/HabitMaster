@@ -5,35 +5,37 @@ import MenuBar from "@/components/menu-bar";
 import ReportChart from "@/components/chart";
 import GoBackHeader from "@/components/goback-header";
 import ActivityReportWidget from "@/components/activity-report-widget";
+import WeekDropdown from "@/components/week-dropdownlist";
+
+const weekSelections = ["This week", "Last week", "2 weeks ago", "3 weeks ago", "4 weeks ago"];
 
 
-function findCurrentWeekDates() {
-    const weekDays = [];
-    const today = new Date();
-    const dayOfWeek = today.getDay(); // 0 (Sunday) to 6 (Saturday)
-    const diffToMonday = (dayOfWeek === 0 ? -6 : 1) - dayOfWeek;
-
-   
-    for (let i = 0; i <= 6; i++) { // Set the first day to Monday and loop through 7 days
-        const day = new Date(today); // Create a new date for each day
-        day.setDate(today.getDate() + diffToMonday + i); // Calculate each day's date
-        weekDays.push(day.toDateString()); // Convert to a readable format or keep as a Date object
-    }
-    return weekDays;
-} 
 
 export default function Report() {
+    const [selectedWeek, setSelectedWeek] = useState("This week");
     const [activitiesByDay, setActivitiesByDay] = useState([[], [], [], [], [], [], []]);
     const [summarizedActivities, setSummarizedActivities] = useState({});
-
     /* example summarizedActivities
-        {
-            "FUu8GYXd9jhTk9ow7Jw3": {name: "Study", duration: 30, unit: "minute", category: "study", completionCount: 3, totalCount: 5},
-            "ABc8GYXd9jhTk9ow7Jw3": {duration: 30, unit: "minute", category: "exercise", completionCount: 3, totalCount: 5},
+        {"FUu8GYXd9jhTk9ow7Jw3": {name: "Study", duration: 30, unit: "minute", category: "study", completionCount: 3, totalCount: 5},
+         "ABc8GYXd9jhTk9ow7Jw3": {duration: 30, unit: "minute", category: "exercise", completionCount: 3, totalCount: 5},
         }
     */
-   
 
+    function findCurrentWeekDates() {
+        const weekDays = [];
+        const weekOffset = weekSelections.indexOf(selectedWeek);
+        const today = new Date();
+        const dayOfWeek = today.getDay(); // 0 (Sunday) to 6 (Saturday)
+        const diffToMonday = (dayOfWeek === 0 ? -6 : 1) - dayOfWeek;
+        
+        for (let i = 0; i <= 6; i++) { // Set the first day to Monday and loop through 7 days
+            const day = new Date(today); // Create a new date for each day
+            day.setDate(today.getDate() + diffToMonday + i - weekOffset*7); // Calculate each day's date
+            weekDays.push(day.toDateString()); // Convert to a readable format or keep as a Date object
+        }
+        return weekDays;
+    } 
+   
     useEffect(() => {
         const weekDays = findCurrentWeekDates();
         async function fetchData() {
@@ -55,7 +57,7 @@ export default function Report() {
         }
        
         fetchData();
-    }, []);  
+    }, [selectedWeek]);  
 
     useEffect(() => {
         function summarizeActivities() {
@@ -83,13 +85,8 @@ export default function Report() {
     }, [activitiesByDay]); // Dependency on activitiesByDay to summarize activities
 
  
-    
-
-    
-
-
+   
     return (
-        
         <div className="bg-light-blue relative isolate overflow-clip">
             {/* paralax background decor*/}
             <div className="fixed -z-10">
@@ -113,8 +110,18 @@ export default function Report() {
             
             {/* main content */}
             <div className="flex flex-col lg:flex-row items-center justify-center p-6 pb-36 lg:gap-24 gap-10 min-h-screen relative">        
-                <ReportChart activitiesByDay={activitiesByDay}/>
                 
+                <div className="w-full max-w-md gap-4 relative">
+                    {/* select week dropdown */}
+                    <WeekDropdown selectedWeek={selectedWeek} setSelectedWeek={setSelectedWeek} />
+
+                    {/* chart */}
+                    <ReportChart activitiesByDay={activitiesByDay}/>
+                </div>
+                
+                
+                
+                {/* activity report */}
                 <div className="w-full max-w-md min-h-[224px] flex flex-col item-start justify-start">
                     <p className="text-primary text-lg font-semibold pb-4">Progress of this week</p>
                     {/* <ActivityReportWidget name="Study" duration={30} unit={"minute"} category="study" completionCount={3} totalCount={5}/> */}
