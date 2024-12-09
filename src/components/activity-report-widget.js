@@ -30,8 +30,8 @@ export default function ActivityReportWidget({name, duration, unit, category, co
                         {IconComponent && <IconComponent size={50} className='text-[#5337C1]'/>}
                     </div>
                     <div className='flex flex-col justify-around items-start'>
-                        <p className={`text-primary text-sm`}>{totalQuantity} {totalQuantity==1? unit : unit+'s'} {name.toLowerCase()}</p>
-                        <p className='text-lg font-semibold text-primary'>{completedQuantity}/{totalQuantity} {completedQuantity==1? unit : unit+'s'} completed</p>
+                        <p className={`text-primary text-sm`}>{totalQuantity} {totalQuantity==1? unit : unit+'s'} of {name.toLowerCase()}</p>
+                        <p className='text-lg font-semibold text-primary'>{completedQuantity}/{totalQuantity} completed</p>
                     </div>
                 </div>
             </div>

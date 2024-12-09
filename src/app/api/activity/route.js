@@ -44,7 +44,6 @@ async function getActivitiesByDate(targetDate, uid) {
     try {
         const data = [];
         const collectionRef = collection(db, "activities");
-        console.log(targetDate, uid);
         const q = query(
             collectionRef,
             where("uid", "==", uid),

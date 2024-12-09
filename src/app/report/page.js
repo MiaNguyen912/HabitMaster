@@ -1,28 +1,38 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import axios from 'axios';
 import MenuBar from "@/components/menu-bar";
 import ReportChart from "@/components/chart";
 import GoBackHeader from "@/components/goback-header";
 import ActivityReportWidget from "@/components/activity-report-widget";
 
+
+function findCurrentWeekDates() {
+    const weekDays = [];
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // 0 (Sunday) to 6 (Saturday)
+    const diffToMonday = (dayOfWeek === 0 ? -6 : 1) - dayOfWeek;
+
+   
+    for (let i = 0; i <= 6; i++) { // Set the first day to Monday and loop through 7 days
+        const day = new Date(today); // Create a new date for each day
+        day.setDate(today.getDate() + diffToMonday + i); // Calculate each day's date
+        weekDays.push(day.toDateString()); // Convert to a readable format or keep as a Date object
+    }
+    return weekDays;
+} 
+
 export default function Report() {
     const [activitiesByDay, setActivitiesByDay] = useState([[], [], [], [], [], [], []]);
-    
-    function findCurrentWeekDates() {
-        const weekDays = [];
-        const today = new Date();
-        const dayOfWeek = today.getDay(); // 0 (Sunday) to 6 (Saturday)
-        const diffToMonday = (dayOfWeek === 0 ? -6 : 1) - dayOfWeek;
-    
-       
-        for (let i = 0; i <= 6; i++) { // Set the first day to Monday and loop through 7 days
-            const day = new Date(today); // Create a new date for each day
-            day.setDate(today.getDate() + diffToMonday + i); // Calculate each day's date
-            weekDays.push(day.toDateString()); // Convert to a readable format or keep as a Date object
+    const [summarizedActivities, setSummarizedActivities] = useState({});
+
+    /* example summarizedActivities
+        {
+            "FUu8GYXd9jhTk9ow7Jw3": {name: "Study", duration: 30, unit: "minute", category: "study", completionCount: 3, totalCount: 5},
+            "ABc8GYXd9jhTk9ow7Jw3": {duration: 30, unit: "minute", category: "exercise", completionCount: 3, totalCount: 5},
         }
-        return weekDays;
-    } 
+    */
+   
 
     useEffect(() => {
         const weekDays = findCurrentWeekDates();
@@ -38,46 +48,45 @@ export default function Report() {
             // Extract activity data and default to an empty array if no data exists
             const allActivities = responses.map(res =>res.data?.data ?? []);
             setActivitiesByDay(allActivities);
-            console.log(allActivities);
           } catch (error) {
             console.error('Error fetching activities:', error.message);
             setActivitiesByDay([[], [], [], [], [], [], []]); // Set all days to empty activities if there's an error
           }
         }
+       
         fetchData();
-    }, []); 
+    }, []);  
 
-
-
-    const summarizedActivities = {};
-    /*{
-        "FUu8GYXd9jhTk9ow7Jw3": {name: "Study", duration: 30, unit: "minute", category: "study", completionCount: 3, totalCount: 5},
-        "ABc8GYXd9jhTk9ow7Jw3": {duration: 30, unit: "minute", category: "exercise", completionCount: 3, totalCount: 5},
-    }*/
-
-    activitiesByDay.map(activities => {
-        if (activities.length > 0) {
-            activities.map(activity => {
-                const id = activity.id;
-                const status = activity.status;
-
-                if (summarizedActivities[id]) {
-                    summarizedActivities[id].completionCount += status === "completed" ? 1 : 0;
-                    summarizedActivities[id].totalCount += 1;
-                } else {
-                    const name = activity.name;
-                    const duration = activity.duration;
-                    const unit = "minute";
-                    const category = activity.category;
-                    summarizedActivities[id] = { name, duration, unit, category, completionCount: status === "completed" ? 1 : 0, totalCount: 1 };
-                }
-
-                
-            })
+    useEffect(() => {
+        function summarizeActivities() {
+            const newSummarizedActivities = {};
+            activitiesByDay.forEach(activities => {
+                activities.forEach(activity => {
+                    const id = activity.id;
+                    const status = activity.status;
+        
+                    if (newSummarizedActivities[id]) {
+                        newSummarizedActivities[id].completionCount += status === "completed" ? 1 : 0;
+                        newSummarizedActivities[id].totalCount += 1;
+                    } else {
+                        const name = activity.name;
+                        const duration = activity.duration;
+                        const unit = "minute"; // Assume all activities are in minutes, we'll update this later to not hardcode
+                        const category = activity.category;
+                        newSummarizedActivities[id] = { name, duration, unit, category, completionCount: status === "completed" ? 1 : 0, totalCount: 1 };
+                    }
+                });
+            });
+            setSummarizedActivities(newSummarizedActivities);
         }
-    });
+        summarizeActivities();
+    }, [activitiesByDay]); // Dependency on activitiesByDay to summarize activities
 
-    console.log(summarizedActivities);
+ 
+    
+
+    
+
 
     return (
         
@@ -108,7 +117,12 @@ export default function Report() {
                 
                 <div className="w-full max-w-md min-h-[224px] flex flex-col item-start justify-start">
                     <p className="text-primary text-lg font-semibold pb-4">Progress of this week</p>
-                    <ActivityReportWidget name="Study" duration={30} unit={"minute"} category="study" completionCount={3} totalCount={5}/>
+                    {/* <ActivityReportWidget name="Study" duration={30} unit={"minute"} category="study" completionCount={3} totalCount={5}/> */}
+                    {summarizedActivities && Object.entries(summarizedActivities).map(([id, activity]) => {
+                        return (
+                            <ActivityReportWidget key={id} {...activity} />
+                        );
+                    })} 
                 </div>
             </div>
             
