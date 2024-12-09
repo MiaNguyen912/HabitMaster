@@ -184,7 +184,7 @@ export default function Home() {
                                                 deleteFunction={handleDelete}/>
                             ))
                         ) : (
-                            <p className="text-gray-400">You don't have any tasks for today</p>
+                            <p className="text-gray-400">You don&apos;t have any tasks for today</p>
                         )}
                     </div>
                 </div>
