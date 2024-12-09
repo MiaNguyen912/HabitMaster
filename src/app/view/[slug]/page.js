@@ -10,6 +10,8 @@ import GoBackHeader from "@/components/goback-header";
 import { BsTrash3Fill } from "react-icons/bs";
 import { FaRegBell } from "react-icons/fa";
 import React from "react";
+import { Timestamp } from "firebase/firestore";
+
 
 
 // make GET request to /api/activity?id="..."
@@ -74,7 +76,7 @@ export default function View() {
     const adjustedFormData = {
       id: slug_id,
       name: formData.name,
-      date: (new Date((formData.date).replace(/-/g, '/'))).toDateString(),
+      date: new Date(formData.date),
       recurring: daysOfWeek.filter(day => formData[`recurring${day}`]),
       duration: parseInt(formData.hour) * 60 + parseInt(formData.minute),
       category: formData.category,
@@ -90,7 +92,7 @@ export default function View() {
         console.error('Error:', error.message);
     }
     alert("Your activity has been updated!");
-    window.location.href = '/';
+    window.location.href = '/home';
   
   }
 
@@ -119,7 +121,8 @@ export default function View() {
   useEffect(() => {
     async function fetchData() {
       const getResult = await handleGetRequestWithID(slug_id);
-      const startDate = new Date(getResult["data"].date);
+      console.log(getResult["data"].date);
+      const startDate = new Date(getResult["data"].date.seconds * 1000);
       const adjustedDate = startDate.toISOString().split('T')[0];
       setActivity(getResult["data"]); 
 

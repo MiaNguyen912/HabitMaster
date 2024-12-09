@@ -58,7 +58,7 @@ export default function AddActivity() {
     const adjustedFormData = {
       uid: uid,
       name: formData.name,
-      date: (new Date((formData.date).replace(/-/g, '/'))).toDateString(),
+      date: new Date((formData.date)),
       recurring: daysOfWeek.filter(day => formData[`recurring${day}`]),
       duration: parseInt(formData.hour) * 60 + parseInt(formData.minute),
       category: formData.category,
@@ -74,24 +74,6 @@ export default function AddActivity() {
         console.error('Error:', error.message);
     }
     alert("You've created a new task");
-
-    // clear the form
-    // setFormData({
-    //   name: '',
-    //   date: '',
-    //   recurringSun: false,
-    //   recurringMon: false,
-    //   recurringTue: false,
-    //   recurringWed: false,
-    //   recurringThu: false,
-    //   recurringFri: false,
-    //   recurringSat: false,
-    //   hour: '',
-    //   minute: '',
-    //   category: 'study',
-    //   remind: false,
-    // });
-    
     window.location.href = '/home';
   }
 

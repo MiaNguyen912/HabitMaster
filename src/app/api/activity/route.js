@@ -1,17 +1,15 @@
 import { db } from "@/data/firebaseConfig";
-import { collection, doc, setDoc, getDoc, getDocs, query, where, deleteDoc } from "firebase/firestore";
+import { collection, doc, setDoc, getDoc, getDocs, query, where, deleteDoc, Timestamp } from "firebase/firestore";
 
 // ------------------------- create a new activity ------------------------
 export async function POST(req, res) {
     const body = await req.json();
     let { uid, name, date, recurring, duration, category, remind } = body;
 
-
-
     const newActivity = {
         uid,
         name,
-        date,
+        date: Timestamp.fromDate(new Date(date)), // Converts a JavaScript Date to a Firestore Timestamp
         recurring,
         duration,
         category,
@@ -46,11 +44,11 @@ async function getActivitiesByDate(targetDate, uid) {
     try {
         const data = [];
         const collectionRef = collection(db, "activities");
-
+        console.log(targetDate, uid);
         const q = query(
             collectionRef,
             where("uid", "==", uid),
-            where("date", ">=", targetDate.toDateString()),
+            where("date", "<=", targetDate),
             where("recurring", "array-contains", daysOfWeek[targetDateOfWeek])
         );
 
@@ -63,6 +61,7 @@ async function getActivitiesByDate(targetDate, uid) {
         querySnapshot.forEach((doc) => {
             data.push({ id: doc.id, ...doc.data() });
         });
+        console.log(data);
 
         const targetDateCompletedDocRef = doc(db, "daily_completed", targetDate.toDateString());
         const targetDateCompletedSnapshot = await getDoc(targetDateCompletedDocRef);
@@ -144,7 +143,7 @@ export async function PUT(req, res) {
     const body = await req.json();
     const { id, name, recurring, date, duration, category, remind, status } = body;
 
-    const updatedActivity = { name, date, recurring, duration, category, remind };
+    const updatedActivity = { name, date: Timestamp.fromDate(new Date(date)), recurring, duration, category, remind };
 
     const activitiesDocRef = doc(db, "activities", id);
     try {
