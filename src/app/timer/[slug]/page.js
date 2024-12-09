@@ -59,7 +59,7 @@ export default function Timer() {
         console.error('Error:', error.message);
     }
     alert(`You has completed ${name}`);
-    window.location.href = '/';
+    window.location.href = '/home';
   
   }
 
