@@ -34,11 +34,15 @@ export default function CalendarPage() {
 
         {/* main content */}
         <main className="flex flex-col justify-center gap-8 items-center min-h-screen">
-            <div className="calendar-container">
-                <ReactCalendar
-                    onChange={handleDateChange}
-                    value={date}
-                />
+            <div className="google-calendar-container mt-8">
+                {/* Google Calendar Embed */}
+                <iframe
+                    src="https://calendar.google.com/calendar/embed?src=c_305bec7cb7730d43d3f88bb9afe4b8c139cc3154c08f41c3be46b66e77331bb0%40group.calendar.google.com&ctz=America%2FLos_Angeles"
+                    style={{border: "0"}}
+                    width="800"
+                    height="600"
+                    title="Google Calendar"
+                ></iframe>
             </div>
         </main>
 

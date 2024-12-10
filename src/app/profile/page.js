@@ -111,7 +111,7 @@ export default function Profile() {
             <GoBackHeader text="Home"/>
 
             {/* main content */}
-            <div className="flex flex-col items-center justify-center bg-gray-800 h-screen overflow-scroll ">
+            <main className="flex flex-col items-center justify-center bg-gray-800 h-screen overflow-scroll ">
                 <form className="pt-20 max-sm:pt-40 mb-40" onSubmit={handleInfoUpdate}>
                     <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:max-w-xl sm:grid-cols-6">
                         <div className="col-span-full flex items-center gap-x-8">
@@ -197,7 +197,7 @@ export default function Profile() {
                         </button>
                     </div>
                 </form>
-            </div>
+            </main>
 
 
             {/* menu bar */}
