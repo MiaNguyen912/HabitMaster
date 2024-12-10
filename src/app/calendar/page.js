@@ -1,8 +1,19 @@
 'use client';
 
 import MenuBar from "@/components/menu-bar";
+import {useState} from "react";
+import ReactCalendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
-export default function Calendar() {
+export default function CalendarPage() {
+    const [date, setDate] = useState(new Date()); // State to hold the selected date
+
+    const handleDateChange = (newDate) => {
+        setDate(newDate); // Update the selected date when a user clicks a date
+        console.log("Selected Date:", newDate);
+    }
+
+
   return (
     <div className="bg-light-blue relative isolate overflow-clip">
         {/* paralax background decor*/}
@@ -23,7 +34,12 @@ export default function Calendar() {
 
         {/* main content */}
         <main className="flex flex-col justify-center gap-8 items-center min-h-screen">
-          This is Calendar page
+            <div className="calendar-container">
+                <ReactCalendar
+                    onChange={handleDateChange}
+                    value={date}
+                />
+            </div>
         </main>
 
         {/* menu bar */}
