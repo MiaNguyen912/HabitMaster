@@ -23,6 +23,7 @@ export default function AddActivity() {
     minute: '',
     category: 'study',
     remind: false,
+    gcal: false,
   });
 
   function handleInputChange(e) {
@@ -73,6 +74,16 @@ export default function AddActivity() {
     } catch (error) {
         console.error('Error:', error.message);
     }
+
+    // make POST request to /api/calendar
+      if(formData.gcal){
+          try {
+              const response = await axios.post('/../api/calendar', adjustedFormData);
+              console.log('Success:', response.data);
+          } catch (error) {
+              console.error('Error:', error.message);
+          }
+      }
     alert("You've created a new task");
     window.location.href = '/home';
   }
@@ -208,7 +219,18 @@ export default function AddActivity() {
                   />
               </div>
 
-              
+                {/* add to gcal button */}
+                <div className="flex items-center justify-between">
+                    <label htmlFor="remind" className="block text-md text-primary-dark font-semibold">Add to google calendar</label>
+                    <input type='checkbox'
+                           className="w-4 h-4 accent-primary-dark"
+                           name='gcal'
+                           id='gcal'
+                           checked={formData.gcal}
+                           onChange={handleInputChange}
+                    />
+                </div>
+
               {/* create button */}
               <div className="mt-6">
                 <button type="submit" className="w-full py-2 text-white bg-primary-dark rounded-xl font-semibold"><span className="bg-secondary/10 rounded-full px-1 mr-1"><FaPlus size={10} className="inline-block text-secondary -translate-y-[1px]"/></span> Create Task</button>
