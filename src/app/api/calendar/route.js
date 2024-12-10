@@ -9,7 +9,7 @@ export async function POST(request) {
         const { name, date, duration, recurring, category, remind } = body;
 
         // Load the service account key
-        const keyPath =  '/Users/bsteier/Desktop/inf133-habitmaster-444305-de10492a4ca4.json';
+        const keyPath =  process.env.GOOGLE_KEY_PATH;
         const serviceAccount = JSON.parse(fs.readFileSync(keyPath, 'utf-8'));
 
         // Authenticate with Google API
