@@ -2,8 +2,6 @@
 
 import MenuBar from "@/components/menu-bar";
 import {useState} from "react";
-import ReactCalendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
 
 export default function CalendarPage() {
     const [date, setDate] = useState(new Date()); // State to hold the selected date
@@ -34,13 +32,11 @@ export default function CalendarPage() {
 
         {/* main content */}
         <main className="flex flex-col justify-center gap-8 items-center min-h-screen">
-            <div className="google-calendar-container mt-8">
+            <div className="google-calendar-container mt-8 w-full flex justify-center">
                 {/* Google Calendar Embed */}
                 <iframe
                     src="https://calendar.google.com/calendar/embed?src=c_305bec7cb7730d43d3f88bb9afe4b8c139cc3154c08f41c3be46b66e77331bb0%40group.calendar.google.com&ctz=America%2FLos_Angeles"
-                    style={{border: "0"}}
-                    width="800"
-                    height="600"
+                    className="w-full sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-1/2 h-80 sm:h-96 md:h-[60vh] lg:h-[70vh] xl:h-[60vh]"
                     title="Google Calendar"
                 ></iframe>
             </div>
