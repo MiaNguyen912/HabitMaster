@@ -1,5 +1,5 @@
 # HabitMaster 
-Hosted at https://habit-master-2fcz6twq6-mianguyen912s-projects.vercel.app/?vercelToolbarCode=dDSCjYT1bBY8bMU
+Hosted at https://habit-master.vercel.app/
 
 ### Steps to run the project locally:
 - 1: npm install 
