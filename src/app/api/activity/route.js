@@ -60,7 +60,7 @@ async function getActivitiesByDate(targetDate, uid) {
         querySnapshot.forEach((doc) => {
             data.push({ id: doc.id, ...doc.data() });
         });
-        console.log(data);
+        // console.log(data);
 
         const targetDateCompletedDocRef = doc(db, "daily_completed", targetDate.toDateString());
         const targetDateCompletedSnapshot = await getDoc(targetDateCompletedDocRef);
@@ -110,6 +110,7 @@ async function getActivityByID(id) {
         const docRef = doc(db, "activities", id);
         const docSnapshot = await getDoc(docRef);
         if (docSnapshot.exists()) {
+            console.log(docSnapshot.data());
             return Response.json({ status: 200, message: "success", data: { id, ...docSnapshot.data() } });
         } else {
             return Response.json({ status: 404, message: "No such document!" });
@@ -126,6 +127,7 @@ export async function GET(req, res) {
     const targetDate = searchParams.get("date");
     const id = searchParams.get("id");
     const uid = searchParams.get("uid");
+    
 
 
     if (targetDate) {
@@ -141,7 +143,6 @@ export async function GET(req, res) {
 export async function PUT(req, res) {
     const body = await req.json();
     const { id, name, recurring, date, duration, category, remind, status } = body;
-
     const updatedActivity = { name, date: Timestamp.fromDate(new Date(date)), recurring, duration, category, remind };
 
     const activitiesDocRef = doc(db, "activities", id);

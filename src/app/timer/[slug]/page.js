@@ -33,12 +33,15 @@ export default function Timer() {
   const [remind, setRemind] = useState();
   const [duration, setDuration] = useState(1); // set default at 1 minute so that the cup icon will not show up when the page is loading
   const [isCompleted, setIsCompleted] = useState(false);
-
   const [currentDuration, setCurrentDuration] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [quote, setQuote] = useState("");
 
+
   async function handleComplete() {
+    setTimeout(() => {}, 1000);
+
+
     const updatedActivity = {
       id: slug_id,
       name: name,
@@ -67,9 +70,12 @@ export default function Timer() {
     async function fetchData() {
       const getResult = await handleGetRequestWithID(slug_id);
       setDuration(getResult["data"].duration); 
-      setOriginalDuration(getResult["data"].duration); // used to reset the timer
       setName(getResult["data"].name);
-      setDate(getResult["data"].date);
+
+      const date = new Date(getResult["data"].date.seconds * 1000); 
+      const adjustedDate = date.toISOString().split('T')[0];
+
+      setDate(adjustedDate);
       setRecurring(getResult["data"].recurring);
       setCategory(getResult["data"].category);
       setRemind(getResult["data"].remind);
@@ -174,13 +180,25 @@ export default function Timer() {
               </div>
           )}
 
-          {(isCompleted || duration==0) && (
+          {/* {(isCompleted || duration==0) (
               <div className="flex flex-col items-center justify-center gap-4 h-screen p-4 max-sm:p-0 animate-grow">
                 <Image src={trophyImage} alt="trophy" width={100} height={100} />
                 <h1 className="text-4xl font-bold">Congratulations!</h1>
                 <h2 className="text-xl font-bold">You has completed {name}</h2>
               </div>
-          )}
+          )} */}
+          {(() => {
+            if (isCompleted || duration==0){
+              handleComplete();
+              return (
+                <div className="flex flex-col items-center justify-center gap-4 h-screen p-4 max-sm:p-0 animate-grow">
+                  <Image src={trophyImage} alt="trophy" width={100} height={100} />
+                  <h1 className="text-4xl font-bold">Congratulations!</h1>
+                  <h2 className="text-xl font-bold">You has completed {name}</h2>
+                </div>
+              )
+            }
+          })()}
         </div>
     </div>
   );
