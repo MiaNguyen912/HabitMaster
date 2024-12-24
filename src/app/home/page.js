@@ -7,6 +7,9 @@ import DayWidget from "@/components/day-widget";
 import { useState, useEffect } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import axios from "axios";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMicrophone } from "@fortawesome/free-solid-svg-icons";
+import Link from 'next/link';
 
 // Make GET request to /api/activity?date="..."
 async function handleGetRequestByDate(date) {
@@ -128,6 +131,13 @@ export default function Home() {
             <div
                 className="flex flex-col md:flex-row items-center justify-center p-6 pb-36 md:gap-36 gap-8 min-h-screen relative">
                 <div>
+                    {/* microphone button */}
+                    <div className="flex justify-end w-full">
+                        <Link href="/chatbox" className="my-4 py-1 rounded-full w-10 bg-slate-50/30 hover:bg-slate-50 flex justify-center">
+                            <FontAwesomeIcon icon={faMicrophone} className=""/>
+                        </Link>
+                    </div>
+
                     {/* Welcome box */}
                     <div className="flex items-center pb-6">
                         <div
